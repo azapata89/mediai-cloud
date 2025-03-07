@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Paciente - MediAI Cloud</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Barra superior -->
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="./views/dashboard/patient.html" class="ml-4 lg:ml-0">
+                        <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-danger rounded-full">3</span>
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                            <div class="w-10 h-10 rounded-full bg-medical-light flex items-center justify-center text-white font-bold">
+                                MP
+                            </div>
+                            <span class="hidden md:block text-sm">María Pérez</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                        
+                        <!-- Menú desplegable del usuario -->
+                        <div id="user-menu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                            <div class="py-1" role="menu" aria-orientation="vertical">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-user-circle mr-2"></i> Mi perfil
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-cog mr-2"></i> Configuración
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-question-circle mr-2"></i> Ayuda
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="../auth/login.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <!-- Sidebar / Navegación lateral -->
+            <aside id="sidebar" class="w-64 lg:block hidden bg-white shadow-md z-30">
+                <div class="h-full flex flex-col">
+                    <nav class="mt-5 px-4 flex-1">
+                        <div class="space-y-1">
+                            <a href="./patient.html" class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-home mr-3 text-medical"></i>
+                                Dashboard
+                            </a>
+                            <a href="../documents/view.html" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-file-medical mr-3"></i>
+                                Mis Documentos
+                            </a>
+                            <a href="../ai-assistant/chat.html" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-robot mr-3"></i>
+                                Asistente IA
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-calendar-alt mr-3"></i>
+                                Citas Médicas
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-chart-line mr-3"></i>
+                                Tendencias de Salud
+                            </a>
+                            <a href="../permissions/access-control.html" class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-lock mr-3 text-medical"></i>
+                                Permisos de Acceso
+                            </a>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Médicos Autorizados
+                            </h3>
+                            <div class="mt-1 space-y-1">
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        JR
+                                    </span>
+                                    Dr. Juan Ramírez
+                                </a>
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        CL
+                                    </span>
+                                    Dra. Carmen López
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    <div class="p-4 border-t border-gray-200">
+                        <div class="bg-medical-light bg-opacity-10 rounded-lg p-3">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-crown text-yellow-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-700">Plan Básico</p>
+                                    <a href="#" class="text-xs text-medical hover:text-medical-dark">
+                                        Actualizar a Premium
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Contenido principal -->
+            <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900">Bienvenida, María</h1>
+                    <p class="text-gray-600">Última actualización: 15 de febrero, 2025</p>
+                </div>
+                
+                <!-- Tarjetas de resumen -->
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- Documentos médicos -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-medical-light rounded-md p-3">
+                                    <i class="fas fa-file-medical text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Documentos médicos
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                24
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ver todos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Próximas citas -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                    <i class="fas fa-calendar-check text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Próximas citas
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                2
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ver calendario
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Médicos autorizados -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                    <i class="fas fa-user-md text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Médicos autorizados
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                2
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Gestionar permisos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Consultas IA -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                                    <i class="fas fa-robot text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Consultas IA restantes
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                3/5
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Actualizar plan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Documentos recientes y actividad -->
+                <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <!-- Documentos recientes -->
+                    <div class="lg:col-span-2 bg-white shadow rounded-lg">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Documentos recientes</h2>
+                            <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                Ver todos
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Documento
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Fecha
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Categoría
+                                        </th>
+                                        <th scope="col" class="relative px-6 py-3">
+                                            <span class="sr-only">Acciones</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-red-100 text-red-500 rounded">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Resultados de laboratorio
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        Clínica Las Américas
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">12 Feb, 2025</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Laboratorio
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-500 rounded">
+                                                    <i class="fas fa-file-image"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Radiografía de tórax
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        Hospital Central
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">10 Feb, 2025</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                Imagen
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-green-100 text-green-500 rounded">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Informe médico - Cardiología
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        Dr. Juan Ramírez
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">5 Feb, 2025</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Informe
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-yellow-100 text-yellow-500 rounded">
+                                                    <i class="fas fa-file-prescription"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Prescripción médica
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        Dra. Carmen López
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">1 Feb, 2025</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Receta
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Actividad reciente -->
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Actividad reciente</h2>
+                        </div>
+                        <ul class="divide-y divide-gray-200">
+                            <li>
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Documento subido
+                                        </p>
+                                        <div class="ml-2 flex-shrink-0 flex">
+                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Nuevo
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-file-medical flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                                Resultados de laboratorio
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <i class="fas fa-clock flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                            <p>
+                                                Hace 3 horas
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Acceso a documentos
+                                        </p>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-user-md flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                                Dr. Juan Ramírez
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <i class="fas fa-clock flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                            <p>
+                                                Hace 1 día
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Consulta con IA
+                                        </p>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-robot flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                                "¿Qué significan mis niveles de colesterol?"
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <i class="fas fa-clock flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                            <p>
+                                                Hace 2 días
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Cita agendada
+                                        </p>
+                                    </div>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-calendar-alt flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                                Dr. Carmen López - Endocrinología
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <i class="fas fa-clock flex-shrink-0 mr-1.5 text-gray-400"></i>
+                                            <p>
+                                                20 Feb, 10:00 AM
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="bg-gray-50 px-4 py-4 sm:px-6">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ver todo el historial de actividad
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Próximas citas -->
+                <div class="mt-8 bg-white shadow rounded-lg">
+                    <div class="flex items-center justify-between p-4 border-b">
+                        <h2 class="text-lg font-medium text-gray-900">Próximas citas</h2>
+                        <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                            Agendar nueva cita
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <!-- Cita 1 -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-900">Consulta con Dra. Carmen López</h3>
+                                        <p class="text-sm text-gray-600">Endocrinología - Clínica Las Américas</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-gray-500">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-gray-500">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-2 flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-day text-blue-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">20 de Febrero, 2025</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-blue-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">10:00 AM</span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                            Ver detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cita 2 -->
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-900">Consulta con Dr. Juan Ramírez</h3>
+                                        <p class="text-sm text-gray-600">Cardiología - Hospital Central</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-gray-400 hover:text-gray-500">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-gray-400 hover:text-gray-500">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-2 flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-day text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">25 de Febrero, 2025</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">2:30 PM</span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                            Ver detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Call to action Banner -->
+                <div class="mt-8 bg-medical text-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex-1 min-w-0">
+                                <h2 class="text-lg font-bold">
+                                    <i class="fas fa-star mr-2"></i>
+                                    Actualice a Plan Premium para beneficios adicionales
+                                </h2>
+                                <p class="text-sm text-blue-100 mt-1">
+                                    Obtenga consultas ilimitadas con IA, 10GB de almacenamiento y soporte para todos los formatos médicos.
+                                </p>
+                            </div>
+                            <div class="mt-4 md:mt-0 md:ml-6">
+                                <a href="#" class="bg-white text-medical font-medium py-2 px-4 border border-transparent rounded-md shadow-sm hover:bg-gray-100">
+                                    Actualizar Plan
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Toggle para el sidebar en móvil
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+        
+        // Cerrar sidebar en móvil al hacer clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                if (!sidebar.classList.contains('hidden')) {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Toggle para el menú de usuario
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+        
+        // Cerrar menú de usuario al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                if (!userMenu.classList.contains('hidden')) {
+                    userMenu.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+[
+    {
+      "id": "conv_001",
+      "userId": "p_001",
+      "title": "Consulta sobre Colesterol",
+      "messages": [
+        {
+          "id": "msg_001",
+          "sender": "user",
+          "content": "Hola, ¿qué significan mis niveles de colesterol?",
+          "timestamp": "2025-02-14T15:30:00Z"
+        },
+        {
+          "id": "msg_002",
+          "sender": "assistant",
+          "content": "Según tus últimos resultados de laboratorio del 10 de febrero de 2025, tu colesterol total es de 215 mg/dL, lo cual está ligeramente por encima del nivel recomendado de menos de 200 mg/dL.\n\nSin embargo, es importante considerar también otros valores:\n• Tu HDL (colesterol \"bueno\") es 55 mg/dL, lo cual es favorable (por encima de 40 mg/dL es lo recomendado)\n• Tu LDL (colesterol \"malo\") es 130 mg/dL, que está en el límite recomendado\n• Tus triglicéridos están en 145 mg/dL, dentro del rango normal (menos de 150 mg/dL)\n\n¿Te gustaría saber más sobre cómo mejorar estos valores o entender mejor lo que significan?",
+          "timestamp": "2025-02-14T15:30:15Z",
+          "referencedDocuments": [
+            "doc_001"
+          ]
+        },
+        {
+          "id": "msg_003",
+          "sender": "user",
+          "content": "¿Cómo puedo mejorar estos valores?",
+          "timestamp": "2025-02-14T15:31:00Z"
+        },
+        {
+          "id": "msg_004",
+          "sender": "assistant",
+          "content": "Para mejorar tus niveles de colesterol, puedes considerar estos cambios en el estilo de vida:\n\n1. **Alimentación**:\n   • Aumentar consumo de fibra soluble (avena, frijoles, frutas)\n   • Incluir grasas saludables (aceite de oliva, aguacate, nueces)\n   • Reducir grasas saturadas (carnes grasas, lácteos enteros)\n   • Eliminar grasas trans (alimentos procesados)\n   \n2. **Actividad física**:\n   • 30 minutos de ejercicio moderado la mayoría de días\n   • Incluso caminar regularmente puede ayudar\n   \n3. **Otros hábitos**:\n   • Mantener un peso saludable\n   • Limitar el consumo de alcohol\n   • No fumar\n   \nEstos cambios pueden ayudar a reducir tu colesterol total y LDL mientras mantienes o aumentas tu HDL.\n\n¿Te gustaría una recomendación más específica sobre alguno de estos aspectos?",
+          "timestamp": "2025-02-14T15:31:15Z",
+          "referencedDocuments": [
+            "doc_001"
+          ]
+        }
+      ],
+      "lastUpdated": "2025-02-14T15:31:15Z"
+    },
+    {
+      "id": "conv_002",
+      "userId": "p_001",
+      "title": "Resultados de Resonancia Magnética",
+      "messages": [
+        {
+          "id": "msg_005",
+          "sender": "user",
+          "content": "¿Me puedes explicar los resultados de mi resonancia magnética cerebral?",
+          "timestamp": "2025-02-13T10:45:00Z"
+        },
+        {
+          "id": "msg_006",
+          "sender": "assistant",
+          "content": "Según el informe de tu resonancia magnética cerebral realizada el 10 de febrero de 2025 en la Clínica San Rafael, los resultados son normales.\n\nEl informe indica:\n• No se observan lesiones en el parénquima cerebral\n• Sistema ventricular de tamaño normal\n• No hay evidencia de aneurismas\n• Estructuras de la fosa posterior sin alteraciones\n\nEn términos sencillos, la resonancia no muestra ninguna anomalía en tu cerebro. Todos los componentes están funcionando correctamente y tienen un tamaño normal, sin signos de lesiones o problemas de circulación.\n\nEstos resultados son consistentes con el diagnóstico de migraña sin aura realizado por el Dr. Juan Ramírez, ya que las migrañas no suelen mostrar cambios estructurales en las imágenes cerebrales.\n\n¿Hay algún aspecto específico de la resonancia sobre el que te gustaría saber más?",
+          "timestamp": "2025-02-13T10:45:20Z",
+          "referencedDocuments": [
+            "doc_002"
+          ]
+        },
+        {
+          "id": "msg_007",
+          "sender": "user",
+          "content": "¿Qué dijo el especialista sobre estos resultados?",
+          "timestamp": "2025-02-13T10:46:30Z"
+        },
+        {
+          "id": "msg_008",
+          "sender": "assistant",
+          "content": "El estudio fue interpretado inicialmente por el Dr. Alberto Sánchez, Radiólogo de la Clínica San Rafael, quien concluyó que la resonancia magnética se encuentra dentro de límites normales, sin evidencia de lesiones estructurales.\n\nPosteriormente, el Dr. Juan Ramírez, tu Neurólogo tratante, revisó las imágenes y el informe, y compartió la siguiente opinión:\n\n\"La resonancia magnética cerebral se encuentra dentro de límites normales, sin evidencia de lesiones estructurales que expliquen las cefaleas. Los síntomas son compatibles con migraña sin aura. Se recomienda seguimiento clínico y tratamiento sintomático.\"\n\nEsta opinión respalda el diagnóstico previamente establecido de migraña sin aura y confirma que no hay hallazgos preocupantes que requieran intervenciones adicionales más allá del tratamiento que ya has iniciado.",
+          "timestamp": "2025-02-13T10:46:50Z",
+          "referencedDocuments": [
+            "doc_002",
+            "doc_003"
+          ]
+        }
+      ],
+      "lastUpdated": "2025-02-13T10:46:50Z"
+    },
+    {
+      "id": "conv_003",
+      "userId": "p_001",
+      "title": "Acceso a mis documentos",
+      "messages": [
+        {
+          "id": "msg_009",
+          "sender": "user",
+          "content": "¿Quién ha visto mis documentos médicos recientemente?",
+          "timestamp": "2025-02-15T09:20:00Z"
+        },
+        {
+          "id": "msg_010",
+          "sender": "assistant",
+          "content": "En los últimos 30 días, 4 personas han accedido a tu información médica:\n\n1. **Dr. Juan Ramírez (Neurólogo)** - Accedió a tu historial clínico y 3 documentos más el 14 de febrero desde Medellín, Colombia\n\n2. **Dra. Carmen López (Médico General)** - Vio tu resonancia magnética cerebral el 12 de febrero\n\n3. **Dr. Juan Ramírez (Neurólogo)** - Añadió anotaciones a tu informe neurológico el 10 de febrero\n\n4. **Ana Pérez (Familiar)** - Vio tus próximas citas médicas el 8 de febrero (primer acceso)\n\nCabe destacar que se detectó un acceso desde una ubicación inusual: el Dr. Juan Ramírez accedió a tus documentos desde Medellín, Colombia el 14 de febrero, mientras que sus accesos anteriores fueron desde Bogotá.\n\n¿Deseas revisar los detalles de algún acceso específico o gestionar los permisos?",
+          "timestamp": "2025-02-15T09:20:15Z"
+        },
+        {
+          "id": "msg_011",
+          "sender": "user",
+          "content": "¿Por qué aparece una alerta de ubicación inusual?",
+          "timestamp": "2025-02-15T09:21:30Z"
+        },
+        {
+          "id": "msg_012",
+          "sender": "assistant",
+          "content": "El 14 de febrero de 2025, se detectó que el Dr. Juan Ramírez accedió a tu información médica desde Medellín, Colombia, mientras que sus accesos anteriores fueron siempre desde Bogotá.\n\nEste cambio de ubicación activó automáticamente una alerta de seguridad. Sin embargo, esto no necesariamente significa que haya ocurrido un acceso no autorizado, ya que el Dr. Ramírez podría estar de viaje o trabajando desde otra ciudad.\n\nTienes varias opciones:\n\n1. **Confirmar que es seguro** - Si sabes que el Dr. Ramírez está en Medellín actualmente\n2. **Reportar como sospechoso** - Esto bloqueará temporalmente el acceso y notificará al equipo de seguridad\n3. **Contactar al Dr. Ramírez** - Para verificar si efectivamente fue él quien accedió a tus documentos\n\n¿Qué te gustaría hacer al respecto?",
+          "timestamp": "2025-02-15T09:21:45Z"
+        }
+      ],
+      "lastUpdated": "2025-02-15T09:21:45Z"
+    },
+    {
+      "id": "conv_004",
+      "userId": "p_002",
+      "title": "Consulta sobre Ecocardiograma",
+      "messages": [
+        {
+          "id": "msg_013",
+          "sender": "user",
+          "content": "¿Puedes explicarme los resultados de mi ecocardiograma?",
+          "timestamp": "2025-02-12T14:10:00Z"
+        },
+        {
+          "id": "msg_014",
+          "sender": "assistant",
+          "content": "Según tu ecocardiograma realizado el 8 de febrero de 2025 en la Clínica del Corazón, los resultados son completamente normales.\n\nEl informe indica:\n• Tamaño y grosor de las cavidades cardíacas normales\n• Función sistólica del ventrículo izquierdo conservada con una fracción de eyección de 65% (lo normal es >55%)\n• Función diastólica normal\n• Válvulas sin alteraciones significativas\n• No se observa derrame pericárdico (acumulación de líquido alrededor del corazón)\n\nEn términos sencillos, tu corazón tiene un tamaño normal, bombea la sangre de manera eficiente y las válvulas funcionan correctamente. La fracción de eyección de 65% indica que tu corazón está funcionando de manera óptima, expulsando un buen porcentaje de sangre en cada latido.\n\nEstos resultados son muy positivos y muestran que tu corazón está en buen estado. ¿Hay algún aspecto específico del ecocardiograma sobre el que te gustaría más información?",
+          "timestamp": "2025-02-12T14:10:20Z",
+          "referencedDocuments": [
+            "doc_007"
+          ]
+        }
+      ],
+      "lastUpdated": "2025-02-12T14:10:20Z"
+    },
+    {
+      "id": "conv_005",
+      "userId": "p_003",
+      "title": "Función Pulmonar y Asma",
+      "messages": [
+        {
+          "id": "msg_015",
+          "sender": "user",
+          "content": "¿Qué significa mi prueba de función pulmonar?",
+          "timestamp": "2025-02-09T11:30:00Z"
+        },
+        {
+          "id": "msg_016",
+          "sender": "assistant",
+          "content": "Según tu prueba de función pulmonar (espirometría) realizada el 7 de febrero de 2025 en el Hospital Respiratorio, los resultados muestran un patrón obstructivo leve con reversibilidad significativa tras la administración de broncodilatador, lo cual es compatible con asma.\n\nLos valores específicos muestran:\n\n• **FEV1 pre-broncodilatador:** 78% (valor bajo, menor al 80% esperado)\n• **FEV1 post-broncodilatador:** 89% (mejoró a un nivel normal)\n• **FEV1/FVC pre-broncodilatador:** 0.72 (valor bajo, menor a 0.75)\n• **FEV1/FVC post-broncodilatador:** 0.78 (mejoró a un nivel normal)\n\nEn términos sencillos, estos resultados indican que inicialmente presentabas cierta dificultad para expulsar el aire de tus pulmones (patrón obstructivo), pero esta obstrucción mejoró significativamente después de aplicar un medicamento broncodilatador. Esta respuesta positiva al broncodilatador es característica del asma.\n\nLa buena noticia es que la obstrucción es leve y reversible con medicación, lo que sugiere un buen pronóstico con el tratamiento adecuado.\n\n¿Tienes alguna otra pregunta sobre estos resultados o sobre el asma en general?",
+          "timestamp": "2025-02-09T11:30:20Z",
+          "referencedDocuments": [
+            "doc_008"
+          ]
+        }
+      ],
+      "lastUpdated": "2025-02-09T11:30:20Z"
+    }
+  ]

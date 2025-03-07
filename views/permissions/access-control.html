@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Permisos - MediAI Cloud</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .access-log:hover {
+            background-color: rgba(76, 201, 240, 0.05);
+        }
+        
+        .truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .permission-toggle:checked + .slider {
+            background-color: #0077b6;
+        }
+        
+        .permission-toggle:checked + .slider:before {
+            transform: translateX(1.25rem);
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 2rem;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1rem;
+            width: 1rem;
+            left: 0.25rem;
+            bottom: 0.25rem;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Barra superior -->
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="./views/dashboard/patient.html" class="ml-4 lg:ml-0">
+                        <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-danger rounded-full">3</span>
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                            <div class="w-10 h-10 rounded-full bg-medical-light flex items-center justify-center text-white font-bold">
+                                MP
+                            </div>
+                            <span class="hidden md:block text-sm">María Pérez</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                        
+                        <!-- Menú desplegable del usuario -->
+                        <div id="user-menu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-10">
+                            <div class="py-1" role="menu" aria-orientation="vertical">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-user-circle mr-2"></i> Mi perfil
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-cog mr-2"></i> Configuración
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-question-circle mr-2"></i> Ayuda
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <!-- Sidebar / Navegación lateral -->
+            <aside id="sidebar" class="w-64 lg:block hidden bg-white shadow-md z-30">
+                <div class="h-full flex flex-col">
+                    <nav class="mt-5 px-4 flex-1">
+                        <div class="space-y-1">
+                            <a href="../dashboard/patient.html" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-home mr-3"></i>
+                                Dashboard
+                            </a>
+                            <a href="../documents/view.html" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-file-medical mr-3"></i>
+                                Mis Documentos
+                            </a>
+                            <a href="../ai-assistant/chat.html" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-robot mr-3"></i>
+                                Asistente IA
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-calendar-alt mr-3"></i>
+                                Citas Médicas
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-chart-line mr-3"></i>
+                                Tendencias de Salud
+                            </a>
+                            <a href="#" class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-lock mr-3 text-medical"></i>
+                                Permisos de Acceso
+                            </a>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Médicos Autorizados
+                            </h3>
+                            <div class="mt-1 space-y-1">
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        JR
+                                    </span>
+                                    Dr. Juan Ramírez
+                                </a>
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        CL
+                                    </span>
+                                    Dra. Carmen López
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    <div class="p-4 border-t border-gray-200">
+                        <div class="bg-medical-light bg-opacity-10 rounded-lg p-3">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-crown text-yellow-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-700">Plan Básico</p>
+                                    <a href="#" class="text-xs text-medical hover:text-medical-dark">
+                                        Actualizar a Premium
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Contenido principal -->
+            <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-1">Gestión de Permisos de Acceso</h1>
+                    <p class="text-gray-600">Controla quién puede acceder a tu información médica y qué pueden ver</p>
+                </div>
+                
+                <!-- Alertas y notificaciones de seguridad -->
+                <div class="bg-orange-50 border-l-4 border-orange-400 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-orange-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-orange-700 font-medium">
+                                Alerta de seguridad: Se detectó un acceso desde una ubicación inusual
+                            </p>
+                            <p class="text-sm text-orange-700 mt-1">
+                                Dr. Juan Ramírez accedió a tus documentos desde Medellín, Colombia el 14 de febrero. 
+                                <a href="#" class="font-medium underline">Revisar</a> o 
+                                <a href="#" class="font-medium underline">Confirmar que es seguro</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Panel izquierdo: Personas con acceso -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <div class="flex items-center justify-between p-4 border-b">
+                                <h2 class="text-lg font-medium text-gray-900">Personas con acceso</h2>
+                                <button id="addAccessBtn" class="text-white bg-medical hover:bg-medical-dark px-3 py-1.5 rounded-md text-sm font-medium flex items-center">
+                                    <i class="fas fa-plus mr-1.5"></i>
+                                    Agregar persona
+                                </button>
+                            </div>
+                            
+                            <!-- Filtros y búsqueda -->
+                            <div class="p-4 border-b bg-gray-50">
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                                    <div class="relative flex-grow">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-search text-gray-400"></i>
+                                        </div>
+                                        <input type="text" placeholder="Buscar por nombre o correo" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-medical focus:border-medical text-sm">
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <select class="border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-medical focus:border-medical text-sm">
+                                            <option value="all">Todos los tipos</option>
+                                            <option value="doctors">Médicos</option>
+                                            <option value="family">Familiares</option>
+                                            <option value="caregivers">Cuidadores</option>
+                                        </select>
+                                        <select class="border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-medical focus:border-medical text-sm">
+                                            <option value="all">Todos los estados</option>
+                                            <option value="active">Activos</option>
+                                            <option value="pending">Pendientes</option>
+                                            <option value="expired">Expirados</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Lista de personas con acceso -->
+                            <div class="overflow-hidden overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Persona
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Tipo de acceso
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Documentos
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Vencimiento
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Estado
+                                            </th>
+                                            <th scope="col" class="relative px-6 py-3">
+                                                <span class="sr-only">Acciones</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <!-- Médico 1 -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-medical-dark flex items-center justify-center text-white font-medium">
+                                                        JR
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            Dr. Juan Ramírez
+                                                        </div>
+                                                        <div class="text-sm text-gray-500">
+                                                            Neurología • Hospital Central
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Médico tratante</div>
+                                                <div class="text-xs text-gray-500">Lectura, anotaciones</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Todos</div>
+                                                <div class="text-xs text-gray-500">100% compartido</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Permanente</div>
+                                                <div class="text-xs text-gray-500">Sin fecha de expiración</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Activo
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button class="text-medical hover:text-medical-dark mr-3">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-gray-400 hover:text-gray-600">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Médico 2 -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-green-700 flex items-center justify-center text-white font-medium">
+                                                        CL
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            Dra. Carmen López
+                                                        </div>
+                                                        <div class="text-sm text-gray-500">
+                                                            Medicina General • Clínica San Rafael
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Médico general</div>
+                                                <div class="text-xs text-gray-500">Solo lectura</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Resultados, Imágenes</div>
+                                                <div class="text-xs text-gray-500">70% compartido</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">12 Abril, 2025</div>
+                                                <div class="text-xs text-gray-500">Renueva automáticamente</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Activo
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button class="text-medical hover:text-medical-dark mr-3">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-gray-400 hover:text-gray-600">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Familiar -->
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-medium">
+                                                        AP
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            Ana Pérez
+                                                        </div>
+                                                        <div class="text-sm text-gray-500">
+                                                            Familiar • Hija
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Familiar autorizado</div>
+                                                <div class="text-xs text-gray-500">Solo lectura</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Informes, Citas</div>
+                                                <div class="text-xs text-gray-500">30% compartido</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Permanente</div>
+                                                <div class="text-xs text-gray-500">Sin fecha de expiración</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Pendiente
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button class="text-medical hover:text-medical-dark mr-3">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-gray-400 hover:text-gray-600">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Especialista con acceso expirado -->
+                                        <tr class="bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-medium">
+                                                        AS
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">
+                                                            Dr. Alberto Sánchez
+                                                        </div>
+                                                        <div class="text-sm text-gray-500">
+                                                            Radiología • Hospital Central
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Especialista consultor</div>
+                                                <div class="text-xs text-gray-500">Solo lectura</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Imágenes diagnósticas</div>
+                                                <div class="text-xs text-gray-500">15% compartido</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">Expirado</div>
+                                                <div class="text-xs text-gray-500">30 Ene, 2025</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    Expirado
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button class="text-medical hover:text-medical-dark mr-3">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                </button>
+                                                <button class="text-gray-400 hover:text-gray-600">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t">
+                                <div class="text-sm text-gray-500">
+                                    Mostrando 4 de 4 personas con acceso
+                                </div>
+                                <div class="flex-shrink-0 flex items-center">
+                                    <a href="#" class="text-sm text-medical hover:text-medical-dark">Ver políticas de permisos</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historial de accesos -->
+                        <div class="mt-6 bg-white rounded-lg shadow overflow-hidden">
+                            <div class="flex items-center justify-between p-4 border-b">
+                                <h2 class="text-lg font-medium text-gray-900">Historial de accesos recientes</h2>
+                                <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                    Ver historial completo
+                                </a>
+                            </div>
+                            
+                            <div class="divide-y divide-gray-200">
+                                <!-- Acceso 1 -->
+                                <div class="access-log p-4 hover:cursor-pointer">
+                                    <div class="sm:flex sm:justify-between sm:items-baseline">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                <span>Dr. Juan Ramírez</span>
+                                                <span class="ml-2 px-2 py-0.5 rounded text-xs bg-orange-100 text-orange-800">
+                                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                                    Ubicación inusual
+                                                </span>
+                                            </div>
+                                            <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-file-medical-alt mr-1.5 text-gray-400"></i>
+                                                Vio su historial clínico y 3 documentos más
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 sm:mt-0 text-right">
+                                            <div class="text-sm text-gray-500">14 Feb, 2025 • 10:45 AM</div>
+                                            <div class="mt-1 flex items-center justify-end text-xs text-gray-500">
+                                                <i class="fas fa-map-marker-alt mr-1.5 text-gray-400"></i>
+                                                Medellín, Colombia
+                                                <span class="ml-2 text-orange-600 font-medium cursor-pointer hover:underline">
+                                                    <i class="fas fa-flag mr-0.5"></i>
+                                                    Reportar
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Acceso 2 -->
+                                <div class="access-log p-4 hover:cursor-pointer">
+                                    <div class="sm:flex sm:justify-between sm:items-baseline">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                <span>Dra. Carmen López</span>
+                                            </div>
+                                            <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-file-image mr-1.5 text-gray-400"></i>
+                                                Vio su resonancia magnética cerebral
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 sm:mt-0 text-right">
+                                            <div class="text-sm text-gray-500">12 Feb, 2025 • 3:20 PM</div>
+                                            <div class="mt-1 flex items-center justify-end text-xs text-gray-500">
+                                                <i class="fas fa-map-marker-alt mr-1.5 text-gray-400"></i>
+                                                Bogotá, Colombia
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Acceso 3 -->
+                                <div class="access-log p-4 hover:cursor-pointer">
+                                    <div class="sm:flex sm:justify-between sm:items-baseline">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                <span>Dr. Juan Ramírez</span>
+                                            </div>
+                                            <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-clipboard-list mr-1.5 text-gray-400"></i>
+                                                Añadió anotaciones a su informe neurológico
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 sm:mt-0 text-right">
+                                            <div class="text-sm text-gray-500">10 Feb, 2025 • 11:15 AM</div>
+                                            <div class="mt-1 flex items-center justify-end text-xs text-gray-500">
+                                                <i class="fas fa-map-marker-alt mr-1.5 text-gray-400"></i>
+                                                Bogotá, Colombia
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Acceso 4 -->
+                                <div class="access-log p-4 hover:cursor-pointer">
+                                    <div class="sm:flex sm:justify-between sm:items-baseline">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                <span>Ana Pérez (Familiar)</span>
+                                                <span class="ml-2 px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">
+                                                    Primer acceso
+                                                </span>
+                                            </div>
+                                            <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                <i class="fas fa-calendar-check mr-1.5 text-gray-400"></i>
+                                                Vio sus próximas citas médicas
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 sm:mt-0 text-right">
+                                            <div class="text-sm text-gray-500">8 Feb, 2025 • 4:30 PM</div>
+                                            <div class="mt-1 flex items-center justify-end text-xs text-gray-500">
+                                                <i class="fas fa-map-marker-alt mr-1.5 text-gray-400"></i>
+                                                Bogotá, Colombia
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Panel derecho: Configuración y acceso rápido -->
+                    <div>
+                        <!-- Configuración general de permisos -->
+                        <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                            <div class="p-4 border-b">
+                                <h2 class="text-lg font-medium text-gray-900">Configuración general</h2>
+                            </div>
+                            <div class="p-4 space-y-4">
+                                <!-- Notificaciones de acceso -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Notificaciones de acceso</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Recibe alertas cuando alguien accede a tus documentos</p>
+                                    </div>
+                                    <div class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="permission-toggle opacity-0 w-0 h-0" id="notifications" checked>
+                                        <label for="notifications" class="slider"></label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Verificación de ubicación -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Verificación de ubicación</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Alertas sobre accesos desde ubicaciones inusuales</p>
+                                    </div>
+                                    <div class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="permission-toggle opacity-0 w-0 h-0" id="location" checked>
+                                        <label for="location" class="slider"></label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Verificación de dispositivos -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Verificación de dispositivos</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Alertas sobre accesos desde nuevos dispositivos</p>
+                                    </div>
+                                    <div class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="permission-toggle opacity-0 w-0 h-0" id="devices" checked>
+                                        <label for="devices" class="slider"></label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Renovación automática -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Renovación automática</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Renovar permisos temporales automáticamente</p>
+                                    </div>
+                                    <div class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="permission-toggle opacity-0 w-0 h-0" id="renewal">
+                                        <label for="renewal" class="slider"></label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Autenticación en dos pasos para médicos -->
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-sm font-medium text-gray-900">Autenticación de dos factores</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Requerir verificación adicional para accesos sensibles</p>
+                                    </div>
+                                    <div class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="permission-toggle opacity-0 w-0 h-0" id="twoFactor">
+                                        <label for="twoFactor" class="slider"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Opciones de acción rápida -->
+                        <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                            <div class="p-4 border-b">
+                                <h2 class="text-lg font-medium text-gray-900">Acciones rápidas</h2>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <a href="#" class="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-medical-light hover:bg-opacity-10">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-medical bg-opacity-10 flex items-center justify-center text-medical">
+                                            <i class="fas fa-share-alt"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">Compartir rápido</p>
+                                            <p class="text-xs text-gray-500">Enviar acceso temporal a un nuevo médico</p>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </a>
+                                
+                                <a href="#" class="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-medical-light hover:bg-opacity-10">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-medical bg-opacity-10 flex items-center justify-center text-medical">
+                                            <i class="fas fa-file-export"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">Exportar permisos</p>
+                                            <p class="text-xs text-gray-500">Generar informe de todos los accesos</p>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </a>
+                                
+                                <a href="#" class="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-medical-light hover:bg-opacity-10">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-medical bg-opacity-10 flex items-center justify-center text-medical">
+                                            <i class="fas fa-key"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">Gestionar claves de acceso</p>
+                                            <p class="text-xs text-gray-500">Administrar códigos temporales</p>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </a>
+                                
+                                <a href="#" class="flex items-center justify-between p-3 bg-gray-50 rounded-md hover:bg-medical-light hover:bg-opacity-10">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-medical bg-opacity-10 flex items-center justify-center text-medical">
+                                            <i class="fas fa-briefcase-medical"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">Transferencia médica</p>
+                                            <p class="text-xs text-gray-500">Cambiar de médico principal</p>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Dispositivos conectados -->
+                        <div class="bg-white rounded-lg shadow overflow-hidden">
+                            <div class="flex items-center justify-between p-4 border-b">
+                                <h2 class="text-lg font-medium text-gray-900">Dispositivos conectados</h2>
+                                <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                    Ver todos
+                                </a>
+                            </div>
+                            <div class="divide-y divide-gray-200">
+                                <div class="p-4 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center text-gray-500">
+                                            <i class="fas fa-laptop"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">MacBook Pro</p>
+                                            <p class="text-xs text-gray-500">Bogotá • Activo ahora</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Este dispositivo</span>
+                                </div>
+                                
+                                <div class="p-4 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center text-gray-500">
+                                            <i class="fas fa-mobile-alt"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">iPhone 13</p>
+                                            <p class="text-xs text-gray-500">Bogotá • Hace 2 horas</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-sm text-gray-500 hover:text-medical">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="p-4 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center text-gray-500">
+                                            <i class="fas fa-tablet-alt"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium text-gray-900">iPad</p>
+                                            <p class="text-xs text-gray-500">Bogotá • Hace 3 días</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-sm text-gray-500 hover:text-medical">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Asistente de IA para permisos -->
+                <div class="fixed bottom-6 right-6 z-10">
+                    <button id="aiAssistantBtn" class="w-14 h-14 rounded-full bg-medical hover:bg-medical-dark text-white flex items-center justify-center shadow-lg transition-all hover:scale-105">
+                        <i class="fas fa-robot text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Modal para añadir nueva persona con acceso (inicialmente oculto) -->
+                <div id="addAccessModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                    <div class="bg-white rounded-lg w-full max-w-xl overflow-hidden">
+                        <!-- Cabecera del modal -->
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h3 class="text-lg font-semibold text-gray-900">Agregar nueva persona con acceso</h3>
+                            <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Contenido del modal -->
+                        <div class="p-6 space-y-4">
+                            <!-- Tipo de persona -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Tipo de persona
+                                </label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="flex items-center justify-center p-3 border rounded-md cursor-pointer hover:bg-gray-50 bg-medical-light bg-opacity-10 border-medical">
+                                        <input type="radio" name="personType" value="doctor" class="sr-only" checked>
+                                        <div class="text-center">
+                                            <div class="mx-auto w-10 h-10 rounded-full bg-medical-dark flex items-center justify-center text-white">
+                                                <i class="fas fa-user-md"></i>
+                                            </div>
+                                            <div class="mt-2 text-sm font-medium text-gray-900">Médico</div>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-center justify-center p-3 border rounded-md cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="personType" value="family" class="sr-only">
+                                        <div class="text-center">
+                                            <div class="mx-auto w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="mt-2 text-sm font-medium text-gray-900">Familiar</div>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-center justify-center p-3 border rounded-md cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="personType" value="caregiver" class="sr-only">
+                                        <div class="text-center">
+                                            <div class="mx-auto w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white">
+                                                <i class="fas fa-hand-holding-heart"></i>
+                                            </div>
+                                            <div class="mt-2 text-sm font-medium text-gray-900">Cuidador</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Datos de contacto -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="person-name" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nombre
+                                    </label>
+                                    <input type="text" id="person-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm" placeholder="Nombre completo">
+                                </div>
+                                <div>
+                                    <label for="person-email" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Correo electrónico
+                                    </label>
+                                    <input type="email" id="person-email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm" placeholder="ejemplo@correo.com">
+                                </div>
+                            </div>
+                            
+                            <!-- Información adicional para médicos -->
+                            <div id="doctor-fields" class="border rounded-md p-4 bg-gray-50">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="doctor-specialty" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Especialidad
+                                        </label>
+                                        <select id="doctor-specialty" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm">
+                                            <option value="" disabled selected>Seleccionar...</option>
+                                            <option value="general">Medicina General</option>
+                                            <option value="cardiology">Cardiología</option>
+                                            <option value="neurology">Neurología</option>
+                                            <option value="radiology">Radiología</option>
+                                            <option value="other">Otra</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="doctor-institution" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Institución
+                                        </label>
+                                        <input type="text" id="doctor-institution" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm" placeholder="Hospital o clínica">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Permisos de acceso -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Tipo de acceso
+                                </label>
+                                <select id="access-type" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm">
+                                    <option value="read-only">Solo lectura</option>
+                                    <option value="read-write">Lectura y anotaciones</option>
+                                    <option value="full">Acceso completo</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Documentos compartidos -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Documentos compartidos
+                                </label>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="share-all" name="share-docs" type="radio" class="h-4 w-4 text-medical focus:ring-medical border-gray-300" checked>
+                                        <label for="share-all" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Todos los documentos
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="share-specific" name="share-docs" type="radio" class="h-4 w-4 text-medical focus:ring-medical border-gray-300">
+                                        <label for="share-specific" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Documentos específicos
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="specific-docs" class="pl-7 pt-2 grid grid-cols-2 gap-y-2 hidden">
+                                        <div class="flex items-center">
+                                            <input id="share-lab" type="checkbox" class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                                            <label for="share-lab" class="ml-3 block text-sm text-gray-700">
+                                                Resultados de laboratorio
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="share-images" type="checkbox" class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                                            <label for="share-images" class="ml-3 block text-sm text-gray-700">
+                                                Imágenes diagnósticas
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="share-reports" type="checkbox" class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                                            <label for="share-reports" class="ml-3 block text-sm text-gray-700">
+                                                Informes médicos
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="share-prescriptions" type="checkbox" class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                                            <label for="share-prescriptions" class="ml-3 block text-sm text-gray-700">
+                                                Prescripciones médicas
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Duración del acceso -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Duración del acceso
+                                </label>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="access-permanent" name="access-duration" type="radio" class="h-4 w-4 text-medical focus:ring-medical border-gray-300" checked>
+                                        <label for="access-permanent" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Permanente (hasta revocación)
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="access-limited" name="access-duration" type="radio" class="h-4 w-4 text-medical focus:ring-medical border-gray-300">
+                                        <label for="access-limited" class="ml-3 block text-sm font-medium text-gray-700">
+                                            Temporal
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="access-period" class="pl-7 pt-2 hidden">
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="access-until" class="block text-sm text-gray-700 mb-1">
+                                                    Fecha de vencimiento
+                                                </label>
+                                                <input type="date" id="access-until" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-medical focus:ring-medical sm:text-sm">
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="access-renew" type="checkbox" class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                                                <label for="access-renew" class="ml-3 block text-sm text-gray-700">
+                                                    Renovar automáticamente
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Opciones avanzadas -->
+                            <div>
+                                <button type="button" class="text-sm text-medical hover:text-medical-dark flex items-center">
+                                    <i class="fas fa-cog mr-1"></i>
+                                    Opciones avanzadas
+                                    <i class="fas fa-chevron-down ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Acciones del modal -->
+                        <div class="flex justify-end space-x-3 px-6 py-4 bg-gray-50 border-t">
+                            <button type="button" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" id="cancelAddAccess">
+                                Cancelar
+                            </button>
+                            <button type="button" class="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-medical hover:bg-medical-dark">
+                                Enviar invitación
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel del asistente IA (inicialmente oculto) -->
+                <div id="aiPanel" class="fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-10 hidden">
+                    <div class="flex items-center justify-between p-4 border-b">
+                        <h3 class="font-medium text-gray-900">Asistente IA - Gestión de Permisos</h3>
+                        <button id="closeAiPanel" class="text-gray-400 hover:text-gray-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-600 mb-4">¿Cómo puedo ayudarte con la gestión de permisos de acceso?</p>
+                        
+                        <div class="space-y-2">
+                            <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm">
+                                ¿Quién ha visto mis datos médicos recientemente?
+                            </button>
+                            <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm">
+                                ¿Cómo puedo compartir mis exámenes con mi nuevo doctor?
+                            </button>
+                            <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm">
+                                ¿Por qué recibí una alerta de ubicación inusual?
+                            </button>
+                            <button class="w-full text-left p-2 bg-gray-50 hover:bg-gray-100 rounded-md text-sm">
+                                ¿Cómo configuro un acceso temporal para un especialista?
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 relative">
+                            <input type="text" placeholder="Escribe tu pregunta..." class="w-full pl-3 pr-10 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-medical focus:border-medical text-sm">
+                            <button class="absolute inset-y-0 right-0 px-3 flex items-center text-medical">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Toggle para el sidebar en móvil
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+        
+        // Cerrar sidebar en móvil al hacer clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                if (!sidebar.classList.contains('hidden')) {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Toggle para el menú de usuario
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+        
+        // Cerrar menú de usuario al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                if (!userMenu.classList.contains('hidden')) {
+                    userMenu.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Modal para añadir acceso
+        const addAccessBtn = document.getElementById('addAccessBtn');
+        const addAccessModal = document.getElementById('addAccessModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelAddAccess = document.getElementById('cancelAddAccess');
+        
+        addAccessBtn.addEventListener('click', () => {
+            addAccessModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        function closeAddAccessModal() {
+            addAccessModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModal.addEventListener('click', closeAddAccessModal);
+        cancelAddAccess.addEventListener('click', closeAddAccessModal);
+        
+        // Cerrar modal al hacer clic fuera
+        addAccessModal.addEventListener('click', (e) => {
+            if (e.target === addAccessModal) {
+                closeAddAccessModal();
+            }
+        });
+        
+        // Toggle para mostrar/ocultar documentos específicos
+        const shareSpecific = document.getElementById('share-specific');
+        const shareAll = document.getElementById('share-all');
+        const specificDocs = document.getElementById('specific-docs');
+        
+        shareSpecific.addEventListener('change', () => {
+            if (shareSpecific.checked) {
+                specificDocs.classList.remove('hidden');
+            }
+        });
+        
+        shareAll.addEventListener('change', () => {
+            if (shareAll.checked) {
+                specificDocs.classList.add('hidden');
+            }
+        });
+        
+        // Toggle para mostrar/ocultar periodo de acceso
+        const accessLimited = document.getElementById('access-limited');
+        const accessPermanent = document.getElementById('access-permanent');
+        const accessPeriod = document.getElementById('access-period');
+        
+        accessLimited.addEventListener('change', () => {
+            if (accessLimited.checked) {
+                accessPeriod.classList.remove('hidden');
+            }
+        });
+        
+        accessPermanent.addEventListener('change', () => {
+            if (accessPermanent.checked) {
+                accessPeriod.classList.add('hidden');
+            }
+        });
+        
+        // Asistente IA
+        const aiAssistantBtn = document.getElementById('aiAssistantBtn');
+        const aiPanel = document.getElementById('aiPanel');
+        const closeAiPanel = document.getElementById('closeAiPanel');
+        
+        aiAssistantBtn.addEventListener('click', () => {
+            aiPanel.classList.toggle('hidden');
+        });
+        
+        closeAiPanel.addEventListener('click', () => {
+            aiPanel.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

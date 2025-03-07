@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente IA - MediAI Cloud</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+
+        .chat-messages {
+            height: calc(100% - 70px);
+            overflow-y: auto;
+        }
+
+        .document-preview {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .document-preview:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para las pestañas de historial de conversación */
+        .conversation-tab {
+            transition: all 0.2s ease;
+        }
+
+        .conversation-tab.active {
+            border-color: #0077b6;
+            background-color: rgba(76, 201, 240, 0.1);
+        }
+
+        /* Animación para las respuestas de la IA */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-message {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Estilos para el indicador de escritura */
+        .typing-indicator span {
+            animation: blink 1.4s infinite both;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0.1;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.1;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Barra superior -->
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="../dashboard/patient.html" class="ml-4 lg:ml-0">
+                        <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span
+                            class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-danger rounded-full">3</span>
+                    </button>
+
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                            <div
+                                class="w-10 h-10 rounded-full bg-medical-light flex items-center justify-center text-white font-bold">
+                                MP
+                            </div>
+                            <span class="hidden md:block text-sm">María Pérez</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+
+                        <!-- Menú desplegable del usuario -->
+                        <div id="user-menu"
+                            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-10">
+                            <div class="py-1" role="menu" aria-orientation="vertical">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">
+                                    <i class="fas fa-user-circle mr-2"></i> Mi perfil
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">
+                                    <i class="fas fa-cog mr-2"></i> Configuración
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">
+                                    <i class="fas fa-question-circle mr-2"></i> Ayuda
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="../auth/login.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <!-- Sidebar / Navegación lateral -->
+            <aside id="sidebar" class="w-64 lg:block hidden bg-white shadow-md z-30">
+                <div class="h-full flex flex-col">
+                    <nav class="mt-5 px-4 flex-1">
+                        <div class="space-y-1">
+                            <a href="../dashboard/patient.html"
+                                class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-home mr-3"></i>
+                                Dashboard
+                            </a>
+                            <a href="../documents/view.html"
+                                class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-file-medical mr-3"></i>
+                                Mis Documentos
+                            </a>
+                            <a href="../ai-assistant/chat.html"
+                                class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-robot mr-3 text-medical"></i>
+                                Asistente IA
+                            </a>
+                            <a href="#"
+                                class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-calendar-alt mr-3"></i>
+                                Citas Médicas
+                            </a>
+                            <a href="#"
+                                class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-chart-line mr-3"></i>
+                                Tendencias de Salud
+                            </a>
+                            <a href="../permissions/access-control.html"
+                                class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-lock mr-3"></i>
+                                Permisos de Acceso
+                            </a>
+                        </div>
+
+                        <div class="mt-8">
+                            <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Documentos Recientes
+                            </h3>
+                            <div class="mt-1 space-y-1">
+                                <a href="#"
+                                    class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span
+                                        class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 mr-3">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </span>
+                                    Resultados de Laboratorio
+                                </a>
+                                <a href="#"
+                                    class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span
+                                        class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                                        <i class="fas fa-file-image"></i>
+                                    </span>
+                                    Resonancia Magnética
+                                </a>
+                                <a href="#"
+                                    class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span
+                                        class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
+                                        <i class="fas fa-file-alt"></i>
+                                    </span>
+                                    Informe Cardiología
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-4 border-t border-gray-200">
+                        <div class="bg-medical-light bg-opacity-10 rounded-lg p-3">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-crown text-yellow-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-700">Plan Básico</p>
+                                    <a href="#" class="text-xs text-medical hover:text-medical-dark">
+                                        Actualizar a Premium
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Contenido principal -->
+            <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+                <div class="lg:flex lg:space-x-6">
+                    <!-- Panel izquierdo - Chat con IA -->
+                    <div class="lg:w-2/3 mb-6 lg:mb-0">
+                        <!-- Cabecera del chat -->
+                        <div class="bg-white rounded-t-lg shadow-sm p-4 flex items-center justify-between border-b">
+                            <div class="flex items-center">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-medical flex items-center justify-center text-white">
+                                    <i class="fas fa-robot text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h2 class="text-lg font-semibold text-gray-900">MediAI Assistant</h2>
+                                    <p class="text-sm text-gray-500">Consulta información sobre tu salud</p>
+                                </div>
+                            </div>
+                            <div>
+                                <button id="newChatBtn"
+                                    class="text-medical hover:text-medical-dark p-2 rounded-full hover:bg-gray-100">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button id="infoBtn"
+                                    class="text-medical hover:text-medical-dark p-2 rounded-full hover:bg-gray-100">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Historial de conversaciones (pestañas) -->
+                        <div class="bg-white border-b overflow-x-auto whitespace-nowrap p-2">
+                            <div class="inline-flex space-x-2">
+                                <button
+                                    class="conversation-tab active inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md border">
+                                    <span>Consulta Actual</span>
+                                    <i class="fas fa-times ml-2 text-gray-400 hover:text-gray-600"></i>
+                                </button>
+                                <button
+                                    class="conversation-tab inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md border text-gray-600 hover:bg-gray-50">
+                                    <span>Consulta sobre Colesterol</span>
+                                    <i class="fas fa-times ml-2 text-gray-400 hover:text-gray-600"></i>
+                                </button>
+                                <button
+                                    class="conversation-tab inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md border text-gray-600 hover:bg-gray-50">
+                                    <span>Dolor de Cabeza</span>
+                                    <i class="fas fa-times ml-2 text-gray-400 hover:text-gray-600"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Área de chat -->
+                        <div class="bg-white rounded-b-lg shadow-md chat-container">
+                            <div id="chatMessages" class="chat-messages p-4 space-y-6">
+                                <!-- Mensaje de bienvenida de la IA -->
+                                <div class="flex items-start space-x-3 ai-message">
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 rounded-full bg-medical flex items-center justify-center text-white">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="flex-1 bg-gray-50 rounded-lg p-4 shadow-sm">
+                                        <p class="text-gray-800">
+                                            Hola María, soy tu asistente médico IA. Puedo ayudarte a entender tus
+                                            documentos médicos, responder preguntas sobre tu salud o explicarte términos
+                                            médicos de forma sencilla.
+                                        </p>
+                                        <p class="mt-2 text-gray-800">
+                                            Veo que recientemente se ha añadido a tu historial:
+                                        </p>
+                                        <ul class="mt-2 space-y-2 text-sm">
+                                            <li class="flex items-center">
+                                                <i class="fas fa-file-medical-alt text-medical mr-2"></i>
+                                                <span>Resultados de Resonancia Magnética (Clínica San Rafael, recibidos
+                                                    por interoperabilidad)</span>
+                                            </li>
+                                            <li class="flex items-center">
+                                                <i class="fas fa-file-prescription text-green-600 mr-2"></i>
+                                                <span>Prescripción médica (compartida por Dr. Rodríguez vía
+                                                    WhatsApp)</span>
+                                            </li>
+                                        </ul>
+                                        <p class="mt-3 text-gray-800">
+                                            ¿En qué puedo ayudarte hoy?
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Pregunta del usuario -->
+                                <div class="flex items-start justify-end space-x-3">
+                                    <div class="flex-1 bg-medical-light bg-opacity-10 rounded-lg p-4 shadow-sm">
+                                        <p class="text-gray-800">
+                                            Hola, ¿me puedes explicar qué significan los resultados de mi resonancia
+                                            magnética? Estoy un poco preocupada.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 rounded-full bg-medical-light flex items-center justify-center text-white">
+                                        <span class="font-medium">MP</span>
+                                    </div>
+                                </div>
+
+                                <!-- Respuesta de la IA con documento adjunto -->
+                                <div class="flex items-start space-x-3 ai-message">
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 rounded-full bg-medical flex items-center justify-center text-white">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="flex-1 bg-gray-50 rounded-lg p-4 shadow-sm">
+                                        <p class="text-gray-800">
+                                            No hay motivo para preocuparse, María. Según el informe de tu resonancia
+                                            magnética cerebral realizada el 10 de febrero de 2025 en la Clínica San
+                                            Rafael, los resultados son normales.
+                                        </p>
+
+                                        <div class="mt-3 p-3 bg-white rounded-lg border border-gray-200">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center">
+                                                    <div
+                                                        class="w-10 h-10 rounded-md bg-blue-100 flex items-center justify-center text-blue-500">
+                                                        <i class="fas fa-file-image"></i>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-sm font-medium text-gray-900">RM Cerebral -
+                                                            Informe</p>
+                                                        <p class="text-xs text-gray-500">Clínica San Rafael · 10 Feb,
+                                                            2025</p>
+                                                    </div>
+                                                </div>
+                                                <button id="viewDocument"
+                                                    class="text-xs text-medical hover:text-medical-dark">
+                                                    Ver completo
+                                                </button>
+                                            </div>
+
+                                            <div class="mt-2 text-sm text-gray-600">
+                                                <p class="font-medium">Hallazgos principales:</p>
+                                                <ul class="mt-1 list-disc list-inside">
+                                                    <li>No se observan lesiones parenquimatosas</li>
+                                                    <li>Sistema ventricular de tamaño normal</li>
+                                                    <li>No hay evidencia de aneurismas</li>
+                                                    <li>Estructuras de la fosa posterior sin alteraciones</li>
+                                                </ul>
+
+                                                <p class="mt-2 font-medium">Impresión diagnóstica:</p>
+                                                <p>Estudio dentro de límites normales.</p>
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-3 text-gray-800">
+                                            En términos sencillos, la resonancia no muestra ninguna anomalía en tu
+                                            cerebro. Todos los componentes están funcionando correctamente y tienen un
+                                            tamaño normal, sin signos de lesiones o problemas de circulación.
+                                        </p>
+
+                                        <p class="mt-2 text-gray-800">
+                                            ¿Te gustaría que te explique algo más específico sobre estos resultados?
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Pregunta del usuario -->
+                                <div class="flex items-start justify-end space-x-3">
+                                    <div class="flex-1 bg-medical-light bg-opacity-10 rounded-lg p-4 shadow-sm">
+                                        <p class="text-gray-800">
+                                            Gracias por tranquilizarme. Entonces, ¿mis dolores de cabeza no tienen
+                                            relación con ningún problema cerebral serio?
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 rounded-full bg-medical-light flex items-center justify-center text-white">
+                                        <span class="font-medium">MP</span>
+                                    </div>
+                                </div>
+
+                                <!-- Indicador de escritura (inicialmente oculto) -->
+                                <div id="typingIndicator" class="flex items-start space-x-3 ai-message hidden">
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 rounded-full bg-medical flex items-center justify-center text-white">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="flex-1 bg-gray-50 rounded-lg p-4 shadow-sm">
+                                        <div class="typing-indicator">
+                                            <span>●</span>
+                                            <span>●</span>
+                                            <span>●</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Área de envío de mensaje -->
+                            <div class="border-t p-4">
+                                <form id="chatForm" class="flex space-x-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" id="messageInput" placeholder="Escribe tu pregunta..."
+                                            class="w-full px-4 py-2 border rounded-md shadow-sm focus:border-medical focus:ring-1 focus:ring-medical">
+                                        <button type="button"
+                                            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-medical">
+                                            <i class="fas fa-paperclip"></i>
+                                        </button>
+                                    </div>
+                                    <button type="submit"
+                                        class="bg-medical hover:bg-medical-dark text-white px-4 py-2 rounded-md flex items-center justify-center">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </form>
+
+                                <!-- Sugerencias de preguntas -->
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <button
+                                        class="suggestion-btn text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full transition-colors">
+                                        ¿Qué significan mis niveles de colesterol?
+                                    </button>
+                                    <button
+                                        class="suggestion-btn text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full transition-colors">
+                                        ¿Cómo han evolucionado mis valores de glucosa?
+                                    </button>
+                                    <button
+                                        class="suggestion-btn text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full transition-colors">
+                                        ¿Cuándo fue mi última cita con el cardiólogo?
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel derecho - Documentos y contexto médico -->
+                    <div class="lg:w-1/3">
+                        <!-- Panel de contexto médico -->
+                        <div class="bg-white rounded-lg shadow-md p-4 mb-5">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Contexto Médico</h3>
+
+                            <!-- Perfil médico resumido -->
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-sm font-medium text-gray-700">Perfil de Paciente</h4>
+                                    <button class="text-xs text-medical hover:text-medical-dark">Ver completo</button>
+                                </div>
+                                <div class="bg-gray-50 rounded-md p-3 text-sm">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <p class="text-gray-500">Edad</p>
+                                            <p class="font-medium">42 años</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-500">Grupo sanguíneo</p>
+                                            <p class="font-medium">O+</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-500">Alergias</p>
+                                            <p class="font-medium">Penicilina</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-500">Condiciones crónicas</p>
+                                            <p class="font-medium">Migraña</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Médicos tratantes -->
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-700 mb-2">Médicos Tratantes</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center p-2 bg-gray-50 rounded-md">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-medical-dark flex items-center justify-center text-white font-bold">
+                                            JR
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium">Dr. Juan Rodríguez</p>
+                                            <p class="text-xs text-gray-500">Neurólogo</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center p-2 bg-gray-50 rounded-md">
+                                        <div
+                                            class="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white font-bold">
+                                            CL
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium">Dra. Carmen López</p>
+                                            <p class="text-xs text-gray-500">Médico General</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Medicación actual -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-sm font-medium text-gray-700">Medicación Actual</h4>
+                                    <button class="text-xs text-medical hover:text-medical-dark">Ver historial</button>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="p-2 bg-gray-50 rounded-md flex justify-between items-center">
+                                        <div>
+                                            <p class="text-sm font-medium">Sumatriptán</p>
+                                            <p class="text-xs text-gray-500">50mg - Para migraña</p>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Según
+                                            necesidad</span>
+                                    </div>
+                                    <div class="p-2 bg-gray-50 rounded-md flex justify-between items-center">
+                                        <div>
+                                            <p class="text-sm font-medium">Complejo B</p>
+                                            <p class="text-xs text-gray-500">1 tableta diaria</p>
+                                        </div>
+                                        <span
+                                            class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Activo</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel de documentos -->
+                        <div class="bg-white rounded-lg shadow-md p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-lg font-semibold text-gray-900">Documentos Relevantes</h3>
+                                <div>
+                                    <select
+                                        class="text-xs border-gray-300 rounded-md focus:border-medical focus:ring-medical">
+                                        <option value="recent">Más recientes</option>
+                                        <option value="relevant">Más relevantes</option>
+                                        <option value="all">Todos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Filtros rápidos -->
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button class="text-xs bg-medical text-white px-2 py-1 rounded-md">
+                                    Todos
+                                </button>
+                                <button
+                                    class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-md hover:bg-gray-200">
+                                    Imágenes
+                                </button>
+                                <button
+                                    class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-md hover:bg-gray-200">
+                                    Informes
+                                </button>
+                                <button
+                                    class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-md hover:bg-gray-200">
+                                    Resultados
+                                </button>
+                            </div>
+
+                            <!-- Lista de documentos -->
+                            <div class="space-y-3 overflow-y-auto max-h-96">
+                                <!-- Documento 1: Resonancia Magnética -->
+                                <div
+                                    class="document-preview border rounded-lg p-3 hover:shadow-md cursor-pointer bg-blue-50 border-blue-200">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 rounded-md bg-blue-100 flex items-center justify-center text-blue-500">
+                                                <i class="fas fa-file-image"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">RM Cerebral</p>
+                                                <p class="text-xs text-gray-500">Clínica San Rafael · 10 Feb, 2025</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Imagen</span>
+                                    </div>
+
+                                    <!-- Vista previa de la imagen -->
+                                    <div
+                                        class="h-24 bg-white p-1 rounded border border-gray-200 flex items-center justify-center overflow-hidden">
+                                        <img src="https://blog.fpmaragall.org/hs-fs/hubfs/resonancia%20magnetica%20cerebral%20lesiones.png?width=1634&name=resonancia%20magnetica%20cerebral%20lesiones.png"
+                                            alt="RM Cerebral" class="h-full object-contain">
+                                    </div>
+
+                                    <!-- Metadatos y origen -->
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-share-alt mr-1"></i>
+                                            Recibido por interoperabilidad
+                                        </span>
+                                        <span class="mx-2">·</span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            Dr. Rodríguez
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Documento 2: Informe Neurológico -->
+                                <div class="document-preview border rounded-lg p-3 hover:shadow-md cursor-pointer">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 rounded-md bg-green-100 flex items-center justify-center text-green-500">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">Informe Neurológico</p>
+                                                <p class="text-xs text-gray-500">Dr. Juan Rodríguez · 12 Feb, 2025</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Informe</span>
+                                    </div>
+
+                                    <!-- Extracto del informe -->
+                                    <div class="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                                        <p>Paciente de 42 años que consulta por cefaleas recurrentes de 6 meses de
+                                            evolución. Se realizó RM cerebral que no muestra alteraciones estructurales.
+                                            Diagnóstico: Migraña sin aura...</p>
+                                    </div>
+
+                                    <!-- Metadatos y origen -->
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fab fa-whatsapp mr-1 text-green-600"></i>
+                                            Compartido vía WhatsApp
+                                        </span>
+                                        <span class="mx-2">·</span>
+                                        <span>12 Feb, 2025</span>
+                                    </div>
+                                </div>
+
+                                <!-- Documento 3: Prescripción -->
+                                <div class="document-preview border rounded-lg p-3 hover:shadow-md cursor-pointer">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 rounded-md bg-yellow-100 flex items-center justify-center text-yellow-500">
+                                                <i class="fas fa-file-prescription"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">Prescripción Médica</p>
+                                                <p class="text-xs text-gray-500">Dr. Juan Rodríguez · 12 Feb, 2025</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">Receta</span>
+                                    </div>
+
+                                    <!-- Metadatos y origen -->
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fab fa-whatsapp mr-1 text-green-600"></i>
+                                            Compartido vía WhatsApp
+                                        </span>
+                                        <span class="mx-2">·</span>
+                                        <span>12 Feb, 2025</span>
+                                    </div>
+                                </div>
+
+                                <!-- Documento 4: Laboratorios -->
+                                <div class="document-preview border rounded-lg p-3 hover:shadow-md cursor-pointer">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <div
+                                                class="w-10 h-10 rounded-md bg-red-100 flex items-center justify-center text-red-500">
+                                                <i class="fas fa-vial"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">Exámenes de Sangre</p>
+                                                <p class="text-xs text-gray-500">Laboratorio Central · 5 Ene, 2025</p>
+                                            </div>
+                                        </div>
+                                        <span
+                                            class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">Laboratorio</span>
+                                    </div>
+
+                                    <!-- Metadatos y origen -->
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-envelope mr-1"></i>
+                                            Recibido por correo
+                                        </span>
+                                        <span class="mx-2">·</span>
+                                        <span>6 Ene, 2025</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón para subir documentos -->
+                            <div class="mt-4">
+                                <a href="../documents/upload.html"
+                                    class="w-full flex justify-center items-center px-4 py-2 border border-medical text-medical rounded-md text-sm font-medium hover:bg-medical-light hover:bg-opacity-10">
+                                    <i class="fas fa-upload mr-2"></i>
+                                    Subir nuevo documento
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para visualizar el documento completo (inicialmente oculto) -->
+                <div id="documentModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                    <div class="bg-white rounded-lg w-full max-w-5xl max-h-screen overflow-hidden flex flex-col">
+                        <!-- Cabecera del modal -->
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h3 class="text-lg font-semibold text-gray-900">Resonancia Magnética Cerebral - Informe
+                                Completo</h3>
+                            <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+
+                        <!-- Contenido del modal -->
+                        <div class="flex-1 overflow-auto p-6">
+                            <div class="flex flex-col lg:flex-row lg:space-x-6">
+                                <!-- Imagen de RM (simulada) -->
+                                <div class="lg:w-1/2 mb-6 lg:mb-0">
+                                    <div class="border rounded-lg p-2 bg-gray-100">
+                                        <img src="https://www.researchgate.net/publication/380048822/figure/fig2/AS:11431281246179395@1716331423260/Figura-2-Resonancia-magnetica-cerebral-lesiones-en-hemisferio-cerebeloso-derecho-de.png"
+                                            alt="Imagen de Resonancia Magnética" class="w-full h-auto rounded">
+                                    </div>
+                                    <div class="mt-3 grid grid-cols-4 gap-2">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Medulloblastom_-_MRT_-_T2_sagittal_-_015.jpg" alt="Corte 1"
+                                            class="w-full h-auto rounded border-2 border-medical">
+                                        <img src="https://www.resonanciaabiertacordoba.com/images/rmn_sinpatologia/CRANEO_NORMAL_T2_02.jpg" alt="Corte 2"
+                                            class="w-full h-auto rounded hover:border-2 hover:border-medical cursor-pointer">
+                                        <img src="https://www.resonanciaabiertacordoba.com/images/rmn_sinpatologia/CRANEO_NORMAL_SAGITAL_T1.jpg" alt="Corte 3"
+                                            class="w-full h-auto rounded hover:border-2 hover:border-medical cursor-pointer">
+                                        <img src="https://www.resonanciaabiertacordoba.com/images/rmn_sinpatologia/CRANEO_NORMAL_CORONAL_FLAIR.jpg" alt="Corte 4"
+                                            class="w-full h-auto rounded hover:border-2 hover:border-medical cursor-pointer">
+                                    </div>
+                                </div>
+
+                                <!-- Informe detallado -->
+                                <div class="lg:w-1/2">
+                                    <div class="bg-white border rounded-lg p-4">
+                                        <div class="flex justify-between mb-4">
+                                            <div>
+                                                <h4 class="text-lg font-semibold text-gray-900">Informe Médico</h4>
+                                                <p class="text-sm text-gray-600">RM Cerebral - Clínica San Rafael</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-sm font-medium">Fecha: 10 Feb, 2025</p>
+                                                <p class="text-sm text-gray-600">Dr. Alberto Sánchez, Radiólogo</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-4 text-sm">
+                                            <div>
+                                                <h5 class="font-semibold">Datos del Paciente</h5>
+                                                <div class="mt-1 grid grid-cols-2 gap-2">
+                                                    <div>
+                                                        <span class="text-gray-600">Nombre:</span>
+                                                        <span class="ml-1">María Pérez</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-600">Edad:</span>
+                                                        <span class="ml-1">42 años</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-600">ID Paciente:</span>
+                                                        <span class="ml-1">P-123456</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-gray-600">Médico solicitante:</span>
+                                                        <span class="ml-1">Dr. Juan Rodríguez</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <h5 class="font-semibold">Técnica</h5>
+                                                <p>Resonancia magnética cerebral realizada con equipo 3.0 Tesla,
+                                                    secuencias T1, T2, FLAIR, difusión (DWI) y angiografía por RM (ARM).
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h5 class="font-semibold">Hallazgos</h5>
+                                                <ul class="list-disc list-inside space-y-1">
+                                                    <li>Parénquima cerebral con morfología, volumen y señal conservadas.
+                                                    </li>
+                                                    <li>No se observan lesiones ocupantes de espacio intra ni
+                                                        extraaxiales.</li>
+                                                    <li>Sistema ventricular de tamaño y morfología normal, sin
+                                                        desplazamientos de la línea media.</li>
+                                                    <li>Espacios subaracnoideos de amplitud normal.</li>
+                                                    <li>Estructuras vasculares intracraneales de calibre normal. No se
+                                                        identifican aneurismas ni malformaciones vasculares.</li>
+                                                    <li>Estructuras de la base del cráneo sin alteraciones.</li>
+                                                    <li>Estructuras orbitarias sin alteraciones significativas.</li>
+                                                    <li>Senos paranasales parcialmente valorables, sin evidencia de
+                                                        ocupación patológica.</li>
+                                                    <li>Estructuras de la fosa posterior sin alteraciones.</li>
+                                                </ul>
+                                            </div>
+
+                                            <div>
+                                                <h5 class="font-semibold">Impresión Diagnóstica</h5>
+                                                <p>Estudio de resonancia magnética cerebral dentro de límites normales.
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h5 class="font-semibold">Recomendaciones</h5>
+                                                <p>No se requieren estudios complementarios adicionales. Se sugiere
+                                                    seguimiento clínico por parte del médico tratante.</p>
+                                            </div>
+
+                                            <div class="border-t pt-3">
+                                                <p class="italic">Este informe ha sido validado electrónicamente por el
+                                                    Dr. Alberto Sánchez, Radiólogo, Clínica San Rafael.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Opinión del staff -->
+                                    <div class="mt-4 border rounded-lg p-4 bg-blue-50">
+                                        <h5 class="font-semibold flex items-center">
+                                            <i class="fas fa-user-md text-medical mr-2"></i>
+                                            Opinión de Staff Médico
+                                        </h5>
+                                        <div class="mt-2 text-sm">
+                                            <p class="font-medium">Dr. Juan Rodríguez - Neurólogo</p>
+                                            <p class="mt-1">La resonancia magnética cerebral se encuentra dentro de
+                                                límites normales, sin evidencia de lesiones estructurales que expliquen
+                                                las cefaleas. Los síntomas son compatibles con migraña sin aura. Se
+                                                recomienda seguimiento clínico y tratamiento sintomático.</p>
+                                            <p class="mt-2 text-xs text-gray-600">Añadido el 12 Feb, 2025 - Compartido
+                                                vía WhatsApp</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Acciones del modal -->
+                        <div class="flex justify-between items-center p-4 border-t bg-gray-50">
+                            <div class="flex space-x-2">
+                                <button
+                                    class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                    <i class="fas fa-download mr-1.5"></i>
+                                    Descargar
+                                </button>
+                                <button
+                                    class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                    <i class="fas fa-print mr-1.5"></i>
+                                    Imprimir
+                                </button>
+                                <button
+                                    class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                    <i class="fas fa-share-alt mr-1.5"></i>
+                                    Compartir
+                                </button>
+                            </div>
+                            <button
+                                class="px-3 py-1.5 border border-transparent rounded-md text-sm font-medium text-white bg-medical hover:bg-medical-dark">
+                                <i class="fas fa-robot mr-1.5"></i>
+                                Preguntar a la IA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Toggle para el sidebar en móvil
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Cerrar sidebar en móvil al hacer clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                if (!sidebar.classList.contains('hidden')) {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        });
+
+        // Toggle para el menú de usuario
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Cerrar menú de usuario al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                if (!userMenu.classList.contains('hidden')) {
+                    userMenu.classList.add('hidden');
+                }
+            }
+        });
+
+        // Manejo de las pestañas de conversación
+        const conversationTabs = document.querySelectorAll('.conversation-tab');
+
+        conversationTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                conversationTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Manejo del formulario de chat
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Respuestas predefinidas para la simulación
+        const aiResponses = {
+            "dolores de cabeza": `
+                <div class="flex items-start space-x-3 ai-message">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-medical flex items-center justify-center text-white">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="flex-1 bg-gray-50 rounded-lg p-4 shadow-sm">
+                        <p class="text-gray-800">
+                            Correcto, María. Según tu resonancia magnética cerebral, no hay evidencia de ningún problema estructural que pueda estar causando tus dolores de cabeza. Esto es una muy buena noticia, ya que descarta condiciones serias como tumores, aneurismas o lesiones.
+                        </p>
+                        
+                        <p class="mt-3 text-gray-800">
+                            De acuerdo con las notas del Dr. Rodríguez en tu historial, tus síntomas son compatibles con migraña sin aura. Las migrañas son cefaleas primarias, lo que significa que no son causadas por otra condición médica subyacente.
+                        </p>
+                        
+                        <div class="mt-3 p-3 bg-white rounded-lg border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-md bg-green-100 flex items-center justify-center text-green-500">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Informe Neurológico</p>
+                                        <p class="text-xs text-gray-500">Dr. Juan Rodríguez · 12 Feb, 2025</p>
+                                    </div>
+                                </div>
+                                <button class="text-xs text-medical hover:text-medical-dark">
+                                    Ver completo
+                                </button>
+                            </div>
+                            
+                            <div class="mt-2 text-sm text-gray-600">
+                                <p class="italic">"Paciente de 42 años que consulta por cefaleas recurrentes de 6 meses de evolución. Se realizó RM cerebral que no muestra alteraciones estructurales. Los síntomas descritos son compatibles con migraña sin aura. Se inicia tratamiento con Sumatriptán 50mg para episodios agudos..."</p>
+                            </div>
+                        </div>
+                        
+                        <p class="mt-3 text-gray-800">
+                            Para el manejo de las migrañas, el Dr. Rodríguez te ha recetado Sumatriptán para los episodios agudos. Es importante que sigas sus recomendaciones y que mantengas un registro de tus dolores de cabeza para identificar posibles desencadenantes.
+                        </p>
+                        
+                        <p class="mt-2 text-gray-800">
+                            ¿Te gustaría que te proporcione más información sobre cómo manejar las migrañas o sobre posibles desencadenantes que podrías evitar?
+                        </p>
+                    </div>
+                </div>
+            `,
+
+            "default": `
+                <div class="flex items-start space-x-3 ai-message">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-medical flex items-center justify-center text-white">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="flex-1 bg-gray-50 rounded-lg p-4 shadow-sm">
+                        <p class="text-gray-800">
+                            Gracias por tu pregunta. He analizado tu historial médico para proporcionarte la información más precisa.
+                        </p>
+                        
+                        <p class="mt-2 text-gray-800">
+                            ¿Hay algo más específico sobre tu condición o documentos médicos que te gustaría entender mejor?
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Agregar mensaje del usuario
+            const userMessage = `
+                <div class="flex items-start justify-end space-x-3">
+                    <div class="flex-1 bg-medical-light bg-opacity-10 rounded-lg p-4 shadow-sm">
+                        <p class="text-gray-800">
+                            ${message}
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-medical-light flex items-center justify-center text-white">
+                        <span class="font-medium">MP</span>
+                    </div>
+                </div>
+            `;
+
+            chatMessages.insertAdjacentHTML('beforeend', userMessage);
+            messageInput.value = '';
+
+            // Simular respuesta de la IA
+            typingIndicator.classList.remove('hidden');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+
+                // Seleccionar respuesta basada en palabras clave
+                let response = aiResponses.default;
+                if (message.toLowerCase().includes('dolor') && message.toLowerCase().includes('cabeza')) {
+                    response = aiResponses["dolores de cabeza"];
+                }
+
+                chatMessages.insertAdjacentHTML('beforeend', response);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+        });
+
+        // Botones de sugerencia
+        const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+        suggestionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                messageInput.value = btn.textContent.trim();
+                messageInput.focus();
+            });
+        });
+
+        // Modal para visualizar documentos
+        const viewDocumentBtn = document.getElementById('viewDocument');
+        const documentModal = document.getElementById('documentModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        viewDocumentBtn.addEventListener('click', () => {
+            documentModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            documentModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Cerrar modal al hacer clic fuera
+        documentModal.addEventListener('click', (e) => {
+            if (e.target === documentModal) {
+                documentModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Botones de nueva conversación e info
+        const newChatBtn = document.getElementById('newChatBtn');
+        const infoBtn = document.getElementById('infoBtn');
+
+        newChatBtn.addEventListener('click', () => {
+            alert('Se iniciará una nueva conversación.');
+            // Aquí iría la lógica para iniciar una nueva conversación
+        });
+
+        infoBtn.addEventListener('click', () => {
+            alert('El Asistente IA de MediAI Cloud analiza tu historial médico para ofrecerte respuestas personalizadas y comprensibles sobre tu salud. Toda la información es confidencial y segura.');
+        });
+    </script>
+</body>
+
+</html>

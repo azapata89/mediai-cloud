@@ -1,0 +1,796 @@
+a<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Médico - MediAI Cloud</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Barra superior -->
+        <header class="bg-white shadow-sm">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 focus:outline-none lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="./views/dashboard/doctor.html" class="ml-4 lg:ml-0">
+                        <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-gray-700 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-danger rounded-full">5</span>
+                    </button>
+                    
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                            <div class="w-10 h-10 rounded-full bg-medical-dark flex items-center justify-center text-white font-bold">
+                                JR
+                            </div>
+                            <span class="hidden md:block text-sm">Dr. Juan Rodríguez</span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                        
+                        <!-- Menú desplegable del usuario -->
+                        <div id="user-menu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                            <div class="py-1" role="menu" aria-orientation="vertical">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-user-circle mr-2"></i> Mi perfil
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-cog mr-2"></i> Configuración
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-question-circle mr-2"></i> Ayuda
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <!-- Sidebar / Navegación lateral -->
+            <aside id="sidebar" class="w-64 lg:block hidden bg-white shadow-md z-30">
+                <div class="h-full flex flex-col">
+                    <nav class="mt-5 px-4 flex-1">
+                        <div class="space-y-1">
+                            <a href="./views/dashboard/doctor.html" class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-home mr-3 text-medical"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-users mr-3"></i>
+                                Mis Pacientes
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-calendar-alt mr-3"></i>
+                                Agenda de Citas
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-file-medical mr-3"></i>
+                                Historial Clínico
+                            </a>
+                            <a href="../ai-assistant/chat.html" class="bg-medical-light bg-opacity-10 text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-robot mr-3 text-medical"></i>
+                                Asistente IA
+                            </a>
+                            <a href="#" class="text-gray-700 hover:bg-medical-light hover:bg-opacity-10 hover:text-medical group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <i class="fas fa-chart-line mr-3"></i>
+                                Estadísticas
+                            </a>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Pacientes Recientes
+                            </h3>
+                            <div class="mt-1 space-y-1">
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        MP
+                                    </span>
+                                    María Pérez
+                                </a>
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        CS
+                                    </span>
+                                    Carlos Sánchez
+                                </a>
+                                <a href="#" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-medical hover:bg-medical-light hover:bg-opacity-10">
+                                    <span class="w-8 h-8 rounded-full bg-secondary-200 flex items-center justify-center text-secondary-700 font-bold mr-3">
+                                        AL
+                                    </span>
+                                    Ana López
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    <div class="p-4 border-t border-gray-200">
+                        <div class="bg-medical-light bg-opacity-10 rounded-lg p-3">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-crown text-yellow-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-700">Plan Profesional</p>
+                                    <a href="#" class="text-xs text-medical hover:text-medical-dark">
+                                        Gestionar suscripción
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Contenido principal -->
+            <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900">Bienvenido, Dr. Rodríguez</h1>
+                    <p class="text-gray-600">Jueves, 15 de febrero, 2025</p>
+                </div>
+                
+                <!-- Tarjetas de resumen -->
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <!-- Total de Pacientes -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-medical-light rounded-md p-3">
+                                    <i class="fas fa-users text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Total de Pacientes
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                48
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ver lista completa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Citas de Hoy -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                    <i class="fas fa-calendar-day text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Citas para Hoy
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                8
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ver agenda
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pendientes de Revisión -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                                    <i class="fas fa-clipboard-list text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Pendientes de Revisión
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                5
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Revisar documentos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nuevos Mensajes -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                    <i class="fas fa-envelope text-white text-xl"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">
+                                            Nuevos Mensajes
+                                        </dt>
+                                        <dd>
+                                            <div class="text-lg font-medium text-gray-900">
+                                                3
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-5 py-3">
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-medical hover:text-medical-dark">
+                                    Ir a mensajes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Citas de Hoy y Próximos Pacientes -->
+                <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <!-- Citas de Hoy -->
+                    <div class="lg:col-span-2 bg-white shadow rounded-lg">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Citas de Hoy</h2>
+                            <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                Ver todas
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Paciente
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Hora
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tipo
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Estado
+                                        </th>
+                                        <th scope="col" class="relative px-6 py-3">
+                                            <span class="sr-only">Acciones</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
+                                                    MP
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        María Pérez
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        42 años
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">09:00 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Control
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Confirmada
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
+                                                    JG
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        José González
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        58 años
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">10:00 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                Primera Vez
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Confirmada
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
+                                                    CS
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Carlos Sánchez
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        35 años
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">11:30 AM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Resultados
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Pendiente
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium">
+                                                    AL
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        Ana López
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        28 años
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">02:00 PM</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                Control
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Confirmada
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-medical hover:text-medical-dark">Ver</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Notificaciones -->
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Notificaciones</h2>
+                            <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                Ver todas
+                            </a>
+                        </div>
+                        <ul class="divide-y divide-gray-200">
+                            <li class="p-4 hover:bg-gray-50">
+                                <div class="flex space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <span class="flex items-center justify-center h-10 w-10 rounded-full bg-red-100 text-red-500">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-medium text-gray-900">
+                                            Resultados urgentes
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            Los resultados de laboratorio de Carlos Sánchez requieren revisión urgente.
+                                        </p>
+                                        <p class="mt-1 text-xs text-gray-400">
+                                            Hace 20 minutos
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <div class="flex space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <span class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-500">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-medium text-gray-900">
+                                            Nueva cita agendada
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            Pedro Martínez ha agendado una cita para mañana a las 11:00 AM.
+                                        </p>
+                                        <p class="mt-1 text-xs text-gray-400">
+                                            Hace 1 hora
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <div class="flex space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <span class="flex items-center justify-center h-10 w-10 rounded-full bg-green-100 text-green-500">
+                                            <i class="fas fa-file-medical"></i>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-medium text-gray-900">
+                                            Nuevo documento compartido
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            María Pérez ha compartido su historial médico actualizado.
+                                        </p>
+                                        <p class="mt-1 text-xs text-gray-400">
+                                            Hace 3 horas
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <div class="flex space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <span class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-100 text-yellow-500">
+                                            <i class="fas fa-bell"></i>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-medium text-gray-900">
+                                            Recordatorio
+                                        </p>
+                                        <p class="text-sm text-gray-500">
+                                            Junta médica programada para hoy a las 5:00 PM.
+                                        </p>
+                                        <p class="mt-1 text-xs text-gray-400">
+                                            Hace 6 horas
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Estadísticas y Actividad Reciente -->
+                <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                    <!-- Estadísticas -->
+                    <div class="lg:col-span-2 bg-white shadow rounded-lg">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Estadísticas de Actividad</h2>
+                            <select class="bg-white border border-gray-300 rounded-md shadow-sm py-1 px-3 focus:outline-none focus:ring-medical focus:border-medical text-sm">
+                                <option>Este mes</option>
+                                <option>Último mes</option>
+                                <option>Este año</option>
+                            </select>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex overflow-hidden">
+                                <div class="w-1/3 p-2 text-center">
+                                    <div class="p-4 bg-blue-50 rounded-lg">
+                                        <div class="text-3xl font-bold text-blue-600">32</div>
+                                        <div class="text-sm text-gray-600">Consultas</div>
+                                        <div class="text-xs text-green-600 mt-1">
+                                            <i class="fas fa-arrow-up"></i> 8% vs. mes anterior
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-1/3 p-2 text-center">
+                                    <div class="p-4 bg-green-50 rounded-lg">
+                                        <div class="text-3xl font-bold text-green-600">18</div>
+                                        <div class="text-sm text-gray-600">Nuevos Pacientes</div>
+                                        <div class="text-xs text-green-600 mt-1">
+                                            <i class="fas fa-arrow-up"></i> 12% vs. mes anterior
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-1/3 p-2 text-center">
+                                    <div class="p-4 bg-purple-50 rounded-lg">
+                                        <div class="text-3xl font-bold text-purple-600">24</div>
+                                        <div class="text-sm text-gray-600">Documentos Revisados</div>
+                                        <div class="text-xs text-red-600 mt-1">
+                                            <i class="fas fa-arrow-down"></i> 3% vs. mes anterior
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Gráfico (Simulado) -->
+                            <div class="mt-6 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-chart-line text-4xl text-gray-400"></i>
+                                    <p class="mt-2 text-sm text-gray-500">Gráfico de actividad mensual</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pacientes Recientes -->
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h2 class="text-lg font-medium text-gray-900">Pacientes Recientes</h2>
+                            <a href="#" class="text-sm font-medium text-medical hover:text-medical-dark">
+                                Ver todos
+                            </a>
+                        </div>
+                        <ul class="divide-y divide-gray-200">
+                            <li class="p-4 hover:bg-gray-50">
+                                <a href="#" class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-block h-10 w-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center">
+                                            MP
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            María Pérez
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate">
+                                            42 años - Última consulta: 12 Feb 2025
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <a href="#" class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-block h-10 w-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center">
+                                            CS
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Carlos Sánchez
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate">
+                                            35 años - Última consulta: 10 Feb 2025
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <a href="#" class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-block h-10 w-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center">
+                                            AL
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            Ana López
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate">
+                                            28 años - Última consulta: 8 Feb 2025
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="p-4 hover:bg-gray-50">
+                                <a href="#" class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-block h-10 w-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center">
+                                            JG
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            José González
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate">
+                                            58 años - Última consulta: 5 Feb 2025
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Acciones rápidas -->
+                <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
+                    <div class="p-4 border-b">
+                        <h2 class="text-lg font-medium text-gray-900">Acciones rápidas</h2>
+                    </div>
+                    <div class="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-2">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Nuevo Paciente</span>
+                        </a>
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-2">
+                                <i class="fas fa-calendar-plus"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Agendar Cita</span>
+                        </a>
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-2">
+                                <i class="fas fa-notes-medical"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Nueva Prescripción</span>
+                        </a>
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 mb-2">
+                                <i class="fas fa-file-medical-alt"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Crear Informe</span>
+                        </a>
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-2">
+                                <i class="fas fa-robot"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Usar IA</span>
+                        </a>
+                        <a href="#" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-medical-light hover:bg-opacity-10 transition-colors">
+                            <span class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-2">
+                                <i class="fas fa-pills"></i>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900">Medicamentos</span>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Toggle para el sidebar en móvil
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+        
+        // Cerrar sidebar en móvil al hacer clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                if (!sidebar.classList.contains('hidden')) {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Toggle para el menú de usuario
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+        
+        // Cerrar menú de usuario al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                if (!userMenu.classList.contains('hidden')) {
+                    userMenu.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

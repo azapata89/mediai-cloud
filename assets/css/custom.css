@@ -1,0 +1,351 @@
+/**
+ * MediAI Cloud - Estilos personalizados
+ */
+
+/* Configuración general y variables */
+:root {
+    --color-medical-light: #4cc9f0;
+    --color-medical: #0077b6;
+    --color-medical-dark: #023e8a;
+  }
+  
+  /* Estilos para el layout general */
+  html, body {
+    scroll-behavior: smooth;
+  }
+  
+  /* Ajustes de texto para mejor accesibilidad */
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Truncar texto en múltiples líneas */
+  .truncate-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Mejoras a la accesibilidad de enlaces y botones */
+  a, button {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Estilos personalizados para los dropzones */
+  .dropzone {
+    transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  }
+  
+  .dropzone:hover {
+    border-color: var(--color-medical);
+  }
+  
+  .dropzone-active {
+    border-color: var(--color-medical) !important;
+    background-color: rgba(76, 201, 240, 0.1) !important;
+  }
+  
+  /* Estilos para el toggle de permisos */
+  .permission-toggle:checked + .slider {
+    background-color: var(--color-medical);
+  }
+  
+  .permission-toggle:checked + .slider:before {
+    transform: translateX(1.25rem);
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 2rem;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    left: 0.25rem;
+    bottom: 0.25rem;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  /* Foco personalizado para inputs accesibles */
+  input:focus, select:focus, textarea:focus, button:focus, [tabindex]:focus {
+    outline: 2px solid var(--color-medical-light);
+    outline-offset: 2px;
+  }
+  
+  /* Clases de ayuda para animaciones */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Customización del scrollbar para navegadores webkit */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Estilos para el asistente de IA */
+  .chat-container {
+    height: calc(100vh - 200px);
+  }
+  
+  .chat-messages {
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  
+  .ai-message {
+    animation: fadeIn 0.3s ease forwards;
+  }
+  
+  /* Indicador de escritura para el chat */
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+  }
+  
+  .typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #64748b;
+    margin-right: 4px;
+    animation: blink 1.4s infinite both;
+  }
+  
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes blink {
+    0% { opacity: 0.1; }
+    20% { opacity: 1; }
+    100% { opacity: 0.1; }
+  }
+  
+  /* Estilos para el visor PDF */
+  .pdf-container {
+    height: calc(100vh - 250px);
+    min-height: 500px;
+  }
+  
+  .pdf-toolbar {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+  
+  .pdf-control {
+    transition: all 0.2s;
+  }
+  
+  .pdf-control:hover {
+    background-color: rgba(76, 201, 240, 0.1);
+  }
+  
+  /* Efectos para items en listas y grids */
+  .document-preview, .thumbnail {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .document-preview:hover, .thumbnail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .thumbnail.active {
+    border-color: var(--color-medical);
+    background-color: rgba(76, 201, 240, 0.1);
+  }
+  
+  /* Transiciones para modales */
+  .modal-enter {
+    opacity: 0;
+  }
+  
+  .modal-enter-active {
+    opacity: 1;
+    transition: opacity 300ms;
+  }
+  
+  .modal-exit {
+    opacity: 1;
+  }
+  
+  .modal-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  
+  /* Personalización para las notificaciones */
+  .notification {
+    transform: translateY(-20px);
+    opacity: 0;
+    animation: notificationSlideDown 0.3s forwards;
+  }
+  
+  @keyframes notificationSlideDown {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Estilos responsivos para tarjetas de documentos */
+  @media (max-width: 640px) {
+    .document-card {
+      flex-direction: column;
+    }
+    
+    .document-preview {
+      width: 100%;
+      height: 120px;
+    }
+  }
+  
+  /* Mejoras de usabilidad para la interfaz de carga de archivos */
+  .file-upload-container {
+    transition: all 0.2s ease;
+  }
+  
+  .file-upload-container.dragging {
+    background-color: rgba(76, 201, 240, 0.1);
+    border-color: var(--color-medical);
+  }
+  
+  /* Estilos específicos para el historial de acceso */
+  .access-log {
+    transition: background-color 0.2s ease;
+  }
+  
+  .access-log:hover {
+    background-color: rgba(76, 201, 240, 0.05);
+  }
+  
+  /* Mejoras de accesibilidad para los iconos */
+  button:disabled i, 
+  a.disabled i {
+    opacity: 0.5;
+  }
+  
+  /* Estilos para componentes de perfil y avatar */
+  .user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  
+  /* Personalización para dashboard y stats */
+  .stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Estilos de soporte para pantallas de carga */
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 119, 182, 0.2);
+    border-left-color: var(--color-medical);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Estilos de impresión */
+  @media print {
+    header, footer, .sidebar, .no-print {
+      display: none !important;
+    }
+    
+    main {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    
+    .print-full-width {
+      width: 100% !important;
+    }
+    
+    .print-container {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }

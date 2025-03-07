@@ -1,0 +1,410 @@
+[
+    {
+      "id": "doc_001",
+      "patientId": "p_001",
+      "title": "Resultados de Laboratorio - Feb 2025",
+      "description": "Análisis de sangre completo incluyendo hemograma, perfil lipídico y función hepática",
+      "type": "lab",
+      "format": "pdf",
+      "fileSize": 2458745,
+      "institution": "Clínica Las Américas",
+      "physician": "d_001",
+      "specialty": "neurology",
+      "createdAt": "2025-02-12T09:30:00Z",
+      "documentDate": "2025-02-10T00:00:00Z",
+      "uploadMethod": "interoperability",
+      "tags": ["sangre", "hemograma", "colesterol", "rutina"],
+      "path": "/files/p_001/lab/results_feb_2025.pdf",
+      "thumbnailPath": "/thumbnails/p_001/lab/results_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_001",
+          "userId": "d_001",
+          "text": "Niveles de colesterol ligeramente elevados. Recomiendo ajustes en la dieta.",
+          "timestamp": "2025-02-14T10:45:00Z",
+          "position": {
+            "page": 2,
+            "x": 150,
+            "y": 320,
+            "width": 200,
+            "height": 100
+          }
+        }
+      ],
+      "metadata": {
+        "results": [
+          {
+            "name": "Colesterol total",
+            "value": 215,
+            "unit": "mg/dL",
+            "referenceRange": "< 200",
+            "status": "high"
+          },
+          {
+            "name": "HDL",
+            "value": 55,
+            "unit": "mg/dL",
+            "referenceRange": "> 40",
+            "status": "normal"
+          },
+          {
+            "name": "LDL",
+            "value": 130,
+            "unit": "mg/dL",
+            "referenceRange": "< 130",
+            "status": "borderline"
+          },
+          {
+            "name": "Triglicéridos",
+            "value": 145,
+            "unit": "mg/dL",
+            "referenceRange": "< 150",
+            "status": "normal"
+          },
+          {
+            "name": "Hemoglobina",
+            "value": 14.2,
+            "unit": "g/dL",
+            "referenceRange": "12.0 - 16.0",
+            "status": "normal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "doc_002",
+      "patientId": "p_001",
+      "title": "Resonancia Magnética Cerebral",
+      "description": "Resonancia magnética cerebral para evaluación de cefaleas recurrentes",
+      "type": "imaging",
+      "format": "dicom",
+      "fileSize": 256892100,
+      "institution": "Clínica San Rafael",
+      "physician": "d_003",
+      "specialty": "radiology",
+      "createdAt": "2025-02-10T14:15:00Z",
+      "documentDate": "2025-02-10T00:00:00Z",
+      "uploadMethod": "interoperability",
+      "tags": ["resonancia", "cerebro", "neurología", "cefalea"],
+      "path": "/files/p_001/imaging/brain_mri_feb_2025.dcm",
+      "thumbnailPath": "/thumbnails/p_001/imaging/brain_mri_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_002",
+          "userId": "d_003",
+          "text": "No se observan alteraciones estructurales significativas.",
+          "timestamp": "2025-02-10T16:30:00Z",
+          "position": {
+            "slice": 14,
+            "x": 230,
+            "y": 150,
+            "width": 120,
+            "height": 80
+          }
+        }
+      ],
+      "metadata": {
+        "modality": "MRI",
+        "bodyPart": "HEAD",
+        "studyDescription": "CEREBRO S/C",
+        "seriesCount": 5,
+        "slices": 120,
+        "equipment": "SIEMENS Magnetom Avanto 3T",
+        "radiologistReport": "Parénquima cerebral de morfología, volumen y señal conservadas. No se observan lesiones ocupantes de espacio intra ni extraaxiales. Sistema ventricular de tamaño y morfología normal, sin desplazamientos de la línea media. Espacios subaracnoideos de amplitud normal. Estructuras vasculares intracraneales de calibre normal. No se identifican aneurismas ni malformaciones vasculares. Estructuras de la base del cráneo sin alteraciones. Estructuras orbitarias sin alteraciones significativas. Senos paranasales parcialmente valorables, sin evidencia de ocupación patológica. Estructuras de la fosa posterior sin alteraciones."
+      }
+    },
+    {
+      "id": "doc_003",
+      "patientId": "p_001",
+      "title": "Informe Neurológico",
+      "description": "Informe de consulta neurológica para evaluación de cefaleas",
+      "type": "report",
+      "format": "pdf",
+      "fileSize": 1254863,
+      "institution": "Hospital Central",
+      "physician": "d_001",
+      "specialty": "neurology",
+      "createdAt": "2025-02-12T16:45:00Z",
+      "documentDate": "2025-02-12T00:00:00Z",
+      "uploadMethod": "whatsapp",
+      "tags": ["neurología", "cefalea", "migraña", "informe"],
+      "path": "/files/p_001/reports/neuro_report_feb_2025.pdf",
+      "thumbnailPath": "/thumbnails/p_001/reports/neuro_report_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_003",
+          "userId": "d_001",
+          "text": "Diagnóstico de migraña sin aura confirmado. Se inicia tratamiento preventivo.",
+          "timestamp": "2025-02-12T17:30:00Z",
+          "position": {
+            "page": 1,
+            "x": 180,
+            "y": 450,
+            "width": 240,
+            "height": 120
+          }
+        }
+      ],
+      "metadata": {
+        "diagnosis": "Migraña sin aura",
+        "symptoms": ["Cefalea pulsátil", "Fotofobia", "Náuseas"],
+        "duration": "6 meses de evolución",
+        "frequency": "2-3 episodios por mes",
+        "treatment": "Sumatriptán 50mg para episodios agudos, Complejo B diario",
+        "recommendations": "Evitar desencadenantes como falta de sueño y estrés. Mantener un diario de cefaleas para identificar patrones.",
+        "followUp": "Control en 2 meses"
+      }
+    },
+    {
+      "id": "doc_004",
+      "patientId": "p_001",
+      "title": "Prescripción Médica",
+      "description": "Receta médica para tratamiento de migraña",
+      "type": "prescription",
+      "format": "pdf",
+      "fileSize": 524288,
+      "institution": "Hospital Central",
+      "physician": "d_001",
+      "specialty": "neurology",
+      "createdAt": "2025-02-12T17:45:00Z",
+      "documentDate": "2025-02-12T00:00:00Z",
+      "uploadMethod": "whatsapp",
+      "tags": ["receta", "migraña", "medicamento"],
+      "path": "/files/p_001/prescriptions/migraine_feb_2025.pdf",
+      "thumbnailPath": "/thumbnails/p_001/prescriptions/migraine_feb_2025.jpg",
+      "status": "active",
+      "annotations": [],
+      "metadata": {
+        "medications": [
+          {
+            "name": "Sumatriptán",
+            "dosage": "50mg",
+            "frequency": "1 comprimido al inicio de la crisis, máximo 2 al día",
+            "duration": "Según necesidad",
+            "instructions": "Tomar con agua al inicio de los síntomas de migraña"
+          },
+          {
+            "name": "Complejo B",
+            "dosage": "1 comprimido",
+            "frequency": "1 vez al día",
+            "duration": "60 días",
+            "instructions": "Tomar en la mañana después del desayuno"
+          }
+        ],
+        "refillable": true,
+        "refillCount": 3,
+        "specialInstructions": "Evitar conducir o manejar maquinaria pesada después de tomar Sumatriptán"
+      }
+    },
+    {
+      "id": "doc_005",
+      "patientId": "p_001",
+      "title": "Radiografía de Tórax",
+      "description": "Radiografía de tórax de rutina",
+      "type": "imaging",
+      "format": "dicom",
+      "fileSize": 15728640,
+      "institution": "Hospital Central",
+      "physician": "d_002",
+      "specialty": "general",
+      "createdAt": "2025-02-05T11:30:00Z",
+      "documentDate": "2025-02-05T00:00:00Z",
+      "uploadMethod": "email",
+      "tags": ["radiografía", "tórax", "rutina"],
+      "path": "/files/p_001/imaging/chest_xray_feb_2025.dcm",
+      "thumbnailPath": "/thumbnails/p_001/imaging/chest_xray_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_004",
+          "userId": "d_002",
+          "text": "Campos pulmonares bien aireados, sin imágenes de consolidación. Silueta cardíaca de tamaño normal.",
+          "timestamp": "2025-02-05T14:15:00Z",
+          "position": {
+            "x": 200,
+            "y": 250,
+            "width": 150,
+            "height": 100
+          }
+        }
+      ],
+      "metadata": {
+        "modality": "XR",
+        "bodyPart": "CHEST",
+        "studyDescription": "CHEST PA",
+        "equipment": "GE HealthCare XR DEXS",
+        "radiologistReport": "Índice cardiotorácico conservado. No se observan imágenes de consolidación ni infiltrados. Senos costofrénicos libres. Tráquea centrada. No hay evidencia de nódulos ni masas. Estructuras óseas sin alteraciones."
+      }
+    },
+    {
+      "id": "doc_006",
+      "patientId": "p_001",
+      "title": "Resultados de Laboratorio - Ene 2025",
+      "description": "Análisis de sangre rutinario",
+      "type": "lab",
+      "format": "pdf",
+      "fileSize": 2097152,
+      "institution": "Laboratorio Central",
+      "physician": "d_002",
+      "specialty": "general",
+      "createdAt": "2025-01-10T10:15:00Z",
+      "documentDate": "2025-01-10T00:00:00Z",
+      "uploadMethod": "email",
+      "tags": ["sangre", "rutina"],
+      "path": "/files/p_001/lab/results_jan_2025.pdf",
+      "thumbnailPath": "/thumbnails/p_001/lab/results_jan_2025.jpg",
+      "status": "reviewed",
+      "annotations": [],
+      "metadata": {
+        "results": [
+          {
+            "name": "Colesterol total",
+            "value": 210,
+            "unit": "mg/dL",
+            "referenceRange": "< 200",
+            "status": "high"
+          },
+          {
+            "name": "HDL",
+            "value": 52,
+            "unit": "mg/dL",
+            "referenceRange": "> 40",
+            "status": "normal"
+          },
+          {
+            "name": "LDL",
+            "value": 128,
+            "unit": "mg/dL",
+            "referenceRange": "< 130",
+            "status": "normal"
+          },
+          {
+            "name": "Triglicéridos",
+            "value": 150,
+            "unit": "mg/dL",
+            "referenceRange": "< 150",
+            "status": "borderline"
+          },
+          {
+            "name": "Hemoglobina",
+            "value": 13.9,
+            "unit": "g/dL",
+            "referenceRange": "12.0 - 16.0",
+            "status": "normal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "doc_007",
+      "patientId": "p_002",
+      "title": "Ecocardiograma",
+      "description": "Ecocardiograma transtorácico para evaluación de función cardíaca",
+      "type": "imaging",
+      "format": "dicom",
+      "fileSize": 104857600,
+      "institution": "Clínica del Corazón",
+      "physician": "d_004",
+      "specialty": "cardiology",
+      "createdAt": "2025-02-08T09:45:00Z",
+      "documentDate": "2025-02-08T00:00:00Z",
+      "uploadMethod": "interoperability",
+      "tags": ["corazón", "eco", "cardiología"],
+      "path": "/files/p_002/imaging/echocardiogram_feb_2025.dcm",
+      "thumbnailPath": "/thumbnails/p_002/imaging/echocardiogram_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_005",
+          "userId": "d_004",
+          "text": "Función sistólica conservada. Fracción de eyección del 65%.",
+          "timestamp": "2025-02-08T12:30:00Z",
+          "position": {
+            "frame": 24,
+            "x": 180,
+            "y": 200,
+            "width": 140,
+            "height": 90
+          }
+        }
+      ],
+      "metadata": {
+        "modality": "US",
+        "bodyPart": "HEART",
+        "studyDescription": "ECOCARDIOGRAMA TT",
+        "equipment": "Philips EPIQ CVx",
+        "findings": "Tamaño y grosor de cavidades normales. Función sistólica del ventrículo izquierdo conservada con FE de 65%. Función diastólica normal. Válvulas sin alteraciones significativas. No se observa derrame pericárdico.",
+        "conclusion": "Ecocardiograma dentro de límites normales."
+      }
+    },
+    {
+      "id": "doc_008",
+      "patientId": "p_003",
+      "title": "Prueba de Función Pulmonar",
+      "description": "Espirometría para evaluación de asma",
+      "type": "report",
+      "format": "pdf",
+      "fileSize": 3145728,
+      "institution": "Hospital Respiratorio",
+      "physician": "d_002",
+      "specialty": "general",
+      "createdAt": "2025-02-07T15:30:00Z",
+      "documentDate": "2025-02-07T00:00:00Z",
+      "uploadMethod": "upload",
+      "tags": ["asma", "pulmón", "espirometría"],
+      "path": "/files/p_003/reports/pulmonary_function_feb_2025.pdf",
+      "thumbnailPath": "/thumbnails/p_003/reports/pulmonary_function_feb_2025.jpg",
+      "status": "reviewed",
+      "annotations": [
+        {
+          "id": "annot_006",
+          "userId": "d_002",
+          "text": "Patrón obstructivo leve con reversibilidad significativa después de broncodilatador, compatible con asma.",
+          "timestamp": "2025-02-07T16:45:00Z",
+          "position": {
+            "page": 1,
+            "x": 210,
+            "y": 320,
+            "width": 200,
+            "height": 110
+          }
+        }
+      ],
+      "metadata": {
+        "results": [
+          {
+            "name": "FEV1 pre-BD",
+            "value": 78,
+            "unit": "%",
+            "referenceRange": "> 80%",
+            "status": "low"
+          },
+          {
+            "name": "FEV1 post-BD",
+            "value": 89,
+            "unit": "%",
+            "referenceRange": "> 80%",
+            "status": "normal"
+          },
+          {
+            "name": "FEV1/FVC pre-BD",
+            "value": 0.72,
+            "unit": "ratio",
+            "referenceRange": "> 0.75",
+            "status": "low"
+          },
+          {
+            "name": "FEV1/FVC post-BD",
+            "value": 0.78,
+            "unit": "ratio",
+            "referenceRange": "> 0.75",
+            "status": "normal"
+          }
+        ],
+        "interpretation": "Patrón obstructivo leve con respuesta positiva al broncodilatador. Hallazgos compatibles con asma."
+      }
+    }
+  ]

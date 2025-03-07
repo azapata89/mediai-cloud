@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAI Cloud - Gestión Inteligente de Información Médica</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#ebf5ff',
+                            100: '#e1effe',
+                            200: '#c3ddfd',
+                            300: '#a4cafe',
+                            400: '#76a9fa',
+                            500: '#3f83f8',
+                            600: '#1c64f2',
+                            700: '#1a56db',
+                            800: '#1e429f',
+                            900: '#233876',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+            </a>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="#hero" class="text-secondary-600 hover:text-medical">Inicio</a>
+                <a href="#features" class="text-secondary-600 hover:text-medical">Características</a>
+                <a href="#how-it-works" class="text-secondary-600 hover:text-medical">Cómo Funciona</a>
+                <a href="#pricing" class="text-secondary-600 hover:text-medical">Precios</a>
+                <a href="#contact" class="text-secondary-600 hover:text-medical">Contacto</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <a href="./views/auth/login.html" class="text-secondary-600 hover:text-medical">Iniciar Sesión</a>
+                <a href="./views/auth/register.html" class="bg-medical text-white px-4 py-2 rounded-md hover:bg-medical-dark">Registrarse</a>
+            </div>
+            
+            <!-- Menú móvil -->
+            <button class="md:hidden text-secondary-600" id="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Menú móvil desplegable -->
+        <div class="md:hidden hidden bg-white py-2" id="mobile-menu">
+            <nav class="container mx-auto px-4 flex flex-col space-y-2">
+                <a href="#hero" class="text-secondary-600 hover:text-medical py-2">Inicio</a>
+                <a href="#features" class="text-secondary-600 hover:text-medical py-2">Características</a>
+                <a href="#how-it-works" class="text-secondary-600 hover:text-medical py-2">Cómo Funciona</a>
+                <a href="#pricing" class="text-secondary-600 hover:text-medical py-2">Precios</a>
+                <a href="#contact" class="text-secondary-600 hover:text-medical py-2">Contacto</a>
+                <hr class="my-2">
+                <a href="./views/auth/login.html" class="text-secondary-600 hover:text-medical py-2">Iniciar Sesión</a>
+                <a href="./views/auth/register.html" class="text-medical py-2">Registrarse</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="bg-gradient-to-r from-blue-900 to-medical-dark text-white py-20">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-10 md:mb-0">
+                        <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                            Tu información médica inteligente, en un solo lugar
+                        </h1>
+                        <p class="text-xl mb-8 text-blue-100">
+                            MediAI Cloud te permite almacenar, gestionar y entender toda tu información médica con la ayuda de inteligencia artificial.
+                        </p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="./views/auth/register.html" class="bg-white text-medical-dark font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 text-center">
+                                Comenzar Gratis
+                            </a>
+                            <a href="#how-it-works" class="border border-white text-white px-6 py-3 rounded-lg hover:bg-white/10 text-center">
+                                Cómo Funciona
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img src="https://via.placeholder.com/600x400?text=MediAI+Cloud+Interface" alt="MediAI Cloud Interface" class="rounded-lg shadow-xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-secondary-800 mb-4">Características Principales</h2>
+                    <p class="text-xl text-secondary-600 max-w-3xl mx-auto">
+                        Una plataforma completa para gestionar toda tu información médica con facilidad y seguridad.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Gestión de Documentos Médicos</h3>
+                        <p class="text-secondary-600">
+                            Sube, organiza y accede a tus resultados de laboratorio, historias clínicas, radiografías y más en un solo lugar.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Asistente IA</h3>
+                        <p class="text-secondary-600">
+                            Consulta y comprende tus resultados médicos con un asistente de IA que explica términos técnicos en lenguaje sencillo.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Control de Acceso Seguro</h3>
+                        <p class="text-secondary-600">
+                            Decide quién puede ver tu información médica. Otorga acceso temporal a médicos y especialistas cuando lo necesites.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Segunda fila de características -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                    <!-- Feature 4 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-hospital-user"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Para Pacientes y Médicos</h3>
+                        <p class="text-secondary-600">
+                            Interfaces especializadas para pacientes y profesionales de la salud, facilitando la colaboración y comunicación.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature 5 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Soporte Multi-formato</h3>
+                        <p class="text-secondary-600">
+                            Compatible con PDF, XML, DICOM (imágenes médicas), HL7 y más formatos utilizados en el sector salud.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature 6 -->
+                    <div class="bg-secondary-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+                        <div class="text-medical text-4xl mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Acceso desde Cualquier Dispositivo</h3>
+                        <p class="text-secondary-600">
+                            Accede a tu información médica desde cualquier lugar con tu teléfono, tablet o computadora.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-16 bg-secondary-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-secondary-800 mb-4">Cómo Funciona</h2>
+                    <p class="text-xl text-secondary-600 max-w-3xl mx-auto">
+                        Gestionar tu información médica nunca ha sido tan sencillo.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="bg-medical text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mb-4">
+                            1
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Regístrate</h3>
+                        <p class="text-secondary-600">
+                            Crea una cuenta gratuita en nuestra plataforma para comenzar.
+                        </p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="bg-medical text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mb-4">
+                            2
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Sube tus Documentos</h3>
+                        <p class="text-secondary-600">
+                            Importa tus documentos médicos de cualquier formato con un simple arrastre.
+                        </p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="bg-medical text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mb-4">
+                            3
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Organización Automática</h3>
+                        <p class="text-secondary-600">
+                            Nuestra IA clasifica tus documentos por tipo, especialidad y entidad médica.
+                        </p>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="flex flex-col items-center text-center">
+                        <div class="bg-medical text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mb-4">
+                            4
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Consulta y Comparte</h3>
+                        <p class="text-secondary-600">
+                            Consulta tus datos y compártelos con tus médicos cuando lo necesites.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Demo Video Placeholder -->
+                <div class="mt-16 text-center">
+                    <h3 class="text-2xl font-semibold mb-6">Ve MediAI Cloud en acción</h3>
+                    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="aspect-w-16 aspect-h-9 bg-secondary-200 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-play-circle text-6xl text-medical opacity-70"></i>
+                                <p class="mt-4 text-secondary-600">Video demostrativo de la plataforma</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-secondary-800 mb-4">Planes y Precios</h2>
+                    <p class="text-xl text-secondary-600 max-w-3xl mx-auto">
+                        Elige el plan que mejor se adapte a tus necesidades.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Plan Free -->
+                    <div class="bg-white rounded-lg border border-secondary-200 shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Paciente Básico</h3>
+                            <div class="text-medical-dark text-4xl font-bold mb-4">Gratis</div>
+                            <p class="text-secondary-600 mb-6">
+                                Para uso personal básico con almacenamiento limitado.
+                            </p>
+                            
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>500 MB de almacenamiento</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Asistente IA básico (5 consultas/mes)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Soporte para PDF y XML</span>
+                                </li>
+                                <li class="flex items-start text-secondary-400">
+                                    <i class="fas fa-times mt-1 mr-2"></i>
+                                    <span>Sin soporte para DICOM (imágenes)</span>
+                                </li>
+                                <li class="flex items-start text-secondary-400">
+                                    <i class="fas fa-times mt-1 mr-2"></i>
+                                    <span>Sin acceso para médicos</span>
+                                </li>
+                            </ul>
+                            
+                            <a href="./views/auth/register.html" class="block w-full bg-secondary-100 text-secondary-800 text-center py-3 rounded-md font-semibold hover:bg-secondary-200 transition-colors">
+                                Comenzar Gratis
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Plan Premium -->
+                    <div class="bg-white rounded-lg border-2 border-medical shadow-lg hover:shadow-xl transition-shadow overflow-hidden transform scale-105">
+                        <div class="bg-medical text-white py-2 text-center font-semibold">
+                            Más Popular
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Paciente Premium</h3>
+                            <div class="text-medical-dark text-4xl font-bold mb-1">$9.99</div>
+                            <div class="text-secondary-500 mb-4">por mes</div>
+                            <p class="text-secondary-600 mb-6">
+                                Para pacientes que necesitan gestionar toda su información médica.
+                            </p>
+                            
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>10 GB de almacenamiento</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Asistente IA ilimitado</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Soporte para todos los formatos (PDF, XML, DICOM)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Hasta 5 médicos con acceso simultáneo</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Exportación e interoperabilidad</span>
+                                </li>
+                            </ul>
+                            
+                            <a href="./views/auth/register.html" class="block w-full bg-medical text-white text-center py-3 rounded-md font-semibold hover:bg-medical-dark transition-colors">
+                                Suscribirse
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Plan Pro para Médicos -->
+                    <div class="bg-white rounded-lg border border-secondary-200 shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Médico Profesional</h3>
+                            <div class="text-medical-dark text-4xl font-bold mb-1">$29.99</div>
+                            <div class="text-secondary-500 mb-4">por mes</div>
+                            <p class="text-secondary-600 mb-6">
+                                Para médicos y especialistas con múltiples pacientes.
+                            </p>
+                            
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>50 GB de almacenamiento</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Vista consolidada de pacientes</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Soporte para todos los formatos</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>Pacientes ilimitados</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-success mt-1 mr-2"></i>
+                                    <span>API para integración con otros sistemas</span>
+                                </li>
+                            </ul>
+                            
+                            <a href="./views/auth/register.html" class="block w-full bg-secondary-100 text-secondary-800 text-center py-3 rounded-md font-semibold hover:bg-secondary-200 transition-colors">
+                                Contactar Ventas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enterprise Option -->
+                <div class="mt-12 bg-secondary-100 rounded-lg p-8 text-center">
+                    <h3 class="text-2xl font-bold mb-3">¿Eres una Institución de Salud?</h3>
+                    <p class="text-secondary-600 text-lg mb-6 max-w-3xl mx-auto">
+                        Contamos con planes empresariales para clínicas, hospitales y EPS con integración personalizada y soporte dedicado.
+                    </p>
+                    <a href="#contact" class="inline-block bg-medical text-white px-6 py-3 rounded-md font-semibold hover:bg-medical-dark transition-colors">
+                        Solicitar Información
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-16 bg-medical-dark text-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold mb-4">Lo que dicen nuestros usuarios</h2>
+                    <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                        Miles de pacientes y médicos ya confían en MediAI Cloud.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-2">5.0</span>
+                        </div>
+                        <p class="italic mb-6">
+                            "MediAI Cloud ha transformado la forma en que gestiono mi información médica. Ahora puedo entender mis resultados de laboratorio sin tener que buscar en Google cada término."
+                        </p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-medical-light rounded-full flex items-center justify-center font-bold text-medical-dark mr-4">
+                                MC
+                            </div>
+                            <div>
+                                <div class="font-semibold">María Castillo</div>
+                                <div class="text-blue-200 text-sm">Paciente</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="ml-2">5.0</span>
+                        </div>
+                        <p class="italic mb-6">
+                            "Como cardiólogo, poder acceder a los estudios previos de mis pacientes con su autorización me ahorra tiempo y mejora la calidad de atención que puedo ofrecer."
+                        </p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-medical-light rounded-full flex items-center justify-center font-bold text-medical-dark mr-4">
+                                JR
+                            </div>
+                            <div>
+                                <div class="font-semibold">Dr. Javier Ramírez</div>
+                                <div class="text-blue-200 text-sm">Cardiólogo</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white/10 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half"></i>
+                            </div>
+                            <span class="ml-2">4.5</span>
+                        </div>
+                        <p class="italic mb-6">
+                            "Nuestra clínica ha integrado MediAI Cloud y hemos reducido un 30% el tiempo de atención. Los pacientes están más informados y la comunicación es mucho más fluida."
+                        </p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-medical-light rounded-full flex items-center justify-center font-bold text-medical-dark mr-4">
+                                CL
+                            </div>
+                            <div>
+                                <div class="font-semibold">Clínica Las Américas</div>
+                                <div class="text-blue-200 text-sm">Centro Médico</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-secondary-800 mb-4">Contacto</h2>
+                    <p class="text-xl text-secondary-600 max-w-3xl mx-auto">
+                        ¿Tienes preguntas? Estamos aquí para ayudarte.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Envíanos un mensaje</h3>
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-secondary-700 mb-2">Nombre</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-medical">
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-secondary-700 mb-2">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-medical">
+                            </div>
+                            <div class="mb-4">
+                                <label for="subject" class="block text-secondary-700 mb-2">Asunto</label>
+                                <input type="text" id="subject" class="w-full px-4 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-medical">
+                            </div>
+                            <div class="mb-4">
+                                <label for="message" class="block text-secondary-700 mb-2">Mensaje</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 border border-secondary-300 rounded-md focus:outline-none focus:ring-2 focus:ring-medical"></textarea>
+                            </div>
+                            <button type="submit" class="bg-medical text-white px-6 py-3 rounded-md font-semibold hover:bg-medical-dark transition-colors">
+                                Enviar Mensaje
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Información de Contacto</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="text-medical text-xl mr-4">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Correo electrónico</div>
+                                    <a href="mailto:contacto@mediaicloud.com" class="text-medical hover:underline">contacto@mediaicloud.com</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-medical text-xl mr-4">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Teléfono</div>
+                                    <a href="tel:+5711234567" class="text-medical hover:underline">+57 (1) 123-4567</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-medical text-xl mr-4">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Oficina Principal</div>
+                                    <address class="not-italic">
+                                        Calle 123 #45-67<br>
+                                        Edificio Torre Médica, Piso 5<br>
+                                        Bogotá, Colombia
+                                    </address>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-6">
+                                <div class="font-medium mb-2">Síguenos</div>
+                                <div class="flex space-x-4">
+                                    <a href="#" class="text-secondary-700 hover:text-medical">
+                                        <i class="fab fa-twitter text-xl"></i>
+                                    </a>
+                                    <a href="#" class="text-secondary-700 hover:text-medical">
+                                        <i class="fab fa-facebook text-xl"></i>
+                                    </a>
+                                    <a href="#" class="text-secondary-700 hover:text-medical">
+                                        <i class="fab fa-linkedin text-xl"></i>
+                                    </a>
+                                    <a href="#" class="text-secondary-700 hover:text-medical">
+                                        <i class="fab fa-instagram text-xl"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-12 bg-medical text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-6">
+                    ¿Listo para gestionar tu información médica de forma inteligente?
+                </h2>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="./views/auth/register.html" class="bg-white text-medical font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        Comenzar Gratis
+                    </a>
+                    <a href="#pricing" class="border border-white text-white px-6 py-3 rounded-lg hover:bg-white/10 transition-colors">
+                        Ver Planes
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary-800 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">MediAI Cloud</h3>
+                    <p class="text-secondary-300">
+                        Plataforma de gestión y consulta de información médica con IA.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#hero" class="text-secondary-300 hover:text-white">Inicio</a></li>
+                        <li><a href="#features" class="text-secondary-300 hover:text-white">Características</a></li>
+                        <li><a href="#how-it-works" class="text-secondary-300 hover:text-white">Cómo Funciona</a></li>
+                        <li><a href="#pricing" class="text-secondary-300 hover:text-white">Precios</a></li>
+                        <li><a href="#contact" class="text-secondary-300 hover:text-white">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-secondary-300 hover:text-white">Términos de Servicio</a></li>
+                        <li><a href="#" class="text-secondary-300 hover:text-white">Política de Privacidad</a></li>
+                        <li><a href="#" class="text-secondary-300 hover:text-white">Cumplimiento HIPAA</a></li>
+                        <li><a href="#" class="text-secondary-300 hover:text-white">Seguridad de Datos</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope text-medical-light"></i>
+                            <span class="text-secondary-300">contacto@mediaicloud.com</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-medical-light"></i>
+                            <span class="text-secondary-300">+57 (1) 123-4567</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="#" class="text-medical-light hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-medical-light hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-medical-light hover:text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-medical-light hover:text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-secondary-700 mt-8 pt-6 text-center text-secondary-400">
+                <p>&copy; 2025 MediAI Cloud. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Script para el menú móvil
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Smooth scroll para los enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Cerrar el menú móvil después de hacer clic
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

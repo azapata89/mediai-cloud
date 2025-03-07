@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - MediAI Cloud</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // Configuración de Tailwind con tema personalizado
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            light: '#4cc9f0',
+                            DEFAULT: '#0077b6',
+                            dark: '#023e8a',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header simplificado -->
+        <header class="bg-white shadow-sm py-4">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <a href="/" class="flex items-center space-x-2">
+                        <span class="text-medical font-bold text-xl">MediAI Cloud</span>
+                    </a>
+                    <a href="./views/auth/login.html" class="text-medical hover:text-medical-dark">
+                        Iniciar sesión
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="flex-grow flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-md w-full space-y-8">
+                <div class="text-center">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                        Crear una nueva cuenta
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        O
+                        <a href="./views/auth/login.html" class="font-medium text-medical hover:text-medical-dark">
+                            inicie sesión si ya tiene una cuenta
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    <form class="space-y-6" action="#" method="POST" id="registerForm">
+                        <!-- Selección de tipo de usuario -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Tipo de usuario
+                            </label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="userType" value="patient" checked class="h-4 w-4 text-medical focus:ring-medical border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">Paciente</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="userType" value="doctor" class="h-4 w-4 text-medical focus:ring-medical border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">Médico/Especialista</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Información personal -->
+                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700">
+                                    Nombre
+                                </label>
+                                <div class="mt-1">
+                                    <input id="firstName" name="firstName" type="text" autocomplete="given-name" required 
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700">
+                                    Apellido
+                                </label>
+                                <div class="mt-1">
+                                    <input id="lastName" name="lastName" type="text" autocomplete="family-name" required 
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">
+                                Correo electrónico
+                            </label>
+                            <div class="mt-1">
+                                <input id="email" name="email" type="email" autocomplete="email" required 
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Campo especialidad (solo visible para médicos) -->
+                        <div id="specialtyField" class="hidden">
+                            <label for="specialty" class="block text-sm font-medium text-gray-700">
+                                Especialidad
+                            </label>
+                            <div class="mt-1">
+                                <select id="specialty" name="specialty" 
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                                    <option value="">Seleccionar especialidad</option>
+                                    <option value="general">Medicina General</option>
+                                    <option value="cardiology">Cardiología</option>
+                                    <option value="dermatology">Dermatología</option>
+                                    <option value="neurology">Neurología</option>
+                                    <option value="pediatrics">Pediatría</option>
+                                    <option value="gynecology">Ginecología</option>
+                                    <option value="orthopedics">Ortopedia</option>
+                                    <option value="psychiatry">Psiquiatría</option>
+                                    <option value="other">Otra</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">
+                                Contraseña
+                            </label>
+                            <div class="mt-1 relative">
+                                <input id="password" name="password" type="password" autocomplete="new-password" required 
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                                <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="mt-1 text-xs text-gray-500">
+                                La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y símbolos.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="passwordConfirm" class="block text-sm font-medium text-gray-700">
+                                Confirmar contraseña
+                            </label>
+                            <div class="mt-1 relative">
+                                <input id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" required 
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-medical focus:border-medical sm:text-sm">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input id="terms" name="terms" type="checkbox" required 
+                                class="h-4 w-4 text-medical focus:ring-medical border-gray-300 rounded">
+                            <label for="terms" class="ml-2 block text-sm text-gray-900">
+                                Acepto los <a href="#" class="text-medical hover:underline">Términos de Servicio</a> y la <a href="#" class="text-medical hover:underline">Política de Privacidad</a>
+                            </label>
+                        </div>
+
+                        <div>
+                            <button type="submit" 
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-medical hover:bg-medical-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medical">
+                                Crear cuenta
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">
+                                    O registrarse con
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-2 gap-3">
+                            <div>
+                                <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    <i class="fab fa-google"></i>
+                                    <span class="ml-2">Google</span>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    <i class="fab fa-microsoft"></i>
+                                    <span class="ml-2">Microsoft</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer simplificado -->
+        <footer class="bg-white py-6 border-t border-gray-200">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        <p class="text-sm text-gray-600">&copy; 2025 MediAI Cloud. Todos los derechos reservados.</p>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-sm text-gray-600 hover:text-medical">Términos</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-medical">Privacidad</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-medical">Seguridad</a>
+                        <a href="#" class="text-sm text-gray-600 hover:text-medical">Contacto</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Script para la interacción -->
+    <script>
+        // Toggle para mostrar/ocultar contraseña
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Cambiar el icono
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Mostrar/ocultar campo de especialidad según tipo de usuario
+        const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+        const specialtyField = document.getElementById('specialtyField');
+        
+        userTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'doctor') {
+                    specialtyField.classList.remove('hidden');
+                } else {
+                    specialtyField.classList.add('hidden');
+                }
+            });
+        });
+
+        // Simulación de registro
+        const registerForm = document.getElementById('registerForm');
+        
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar datos
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Validar contraseñas
+            if (password !== passwordConfirm) {
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+            
+            // Validar fortaleza de contraseña (simulado)
+            if (password.length < 8) {
+                alert('La contraseña debe tener al menos 8 caracteres.');
+                return;
+            }
+            
+            // Validar términos
+            if (!terms) {
+                alert('Debe aceptar los términos de servicio y política de privacidad.');
+                return;
+            }
+            
+            // Simular carga
+            const submitButton = registerForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creando cuenta...';
+            
+            // Simular delay de red
+            setTimeout(() => {
+                // Redirigir al dashboard según el rol
+                const userType = document.querySelector('input[name="userType"]:checked').value;
+                if (userType === 'doctor') {
+                    window.location.href = '../dashboard/doctor.html';
+                } else {
+                    window.location.href = '../dashboard/patient.html';
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
