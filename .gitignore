@@ -1,0 +1,14 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Dependencias y directorios generados
+node_modules/
+dist/
+.tmp/
